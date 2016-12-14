@@ -2,7 +2,7 @@
 
 /**
  * 第三方登陆实例抽象类
- * 
+ *
  * @author Coeus <r.anerg@gmail.com>
  */
 
@@ -40,17 +40,24 @@ abstract class OAuth {
      * 接口渠道
      * @var type String
      */
-    private $channel = '';
+    private $channel   = '';
+
+    /**
+     * 当前时间戳
+     * @var type String
+     */
+    protected $timestamp = '';
 
     private function __construct($config = null) {
         if (empty($config) || !array_key_exists('app_key', $config) || !array_key_exists('app_secret', $config) || !array_key_exists('callback', $config) || !array_key_exists('scope', $config)) {
             throw new Exception('请配置申请的APP_KEY和APP_SECRET');
         }
-        $class         = get_class($this);
-        $cls_arr       = explode('\\', $class);
-        $this->channel = strtoupper(end($cls_arr));
-        $_config       = array('response_type' => 'code', 'grant_type' => 'authorization_code');
-        $this->config  = array_merge($config, $_config);
+        $class           = get_class($this);
+        $cls_arr         = explode('\\', $class);
+        $this->channel   = strtoupper(end($cls_arr));
+        $_config         = array('response_type' => 'code', 'grant_type' => 'authorization_code');
+        $this->config    = array_merge($config, $_config);
+        $this->timestamp = time();
     }
 
     /**

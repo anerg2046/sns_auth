@@ -34,14 +34,14 @@ class qq extends \anerg\OAuth2\OAuth {
      * 请求Authorize访问地址
      */
     public function getAuthorizeURL() {
-        setcookie('A_S', NOW_TIME, 600);
+        setcookie('A_S', $this->timestamp, 600);
         $this->initConfig();
         //Oauth 标准参数
         $params = array(
             'response_type' => $this->config['response_type'],
             'client_id'     => $this->config['app_key'],
             'redirect_uri'  => $this->config['callback'],
-            'state'         => NOW_TIME,
+            'state'         => $this->timestamp,
             'scope'         => $this->config['scope'],
             'display'       => $this->Display
         );

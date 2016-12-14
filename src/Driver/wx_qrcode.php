@@ -34,7 +34,7 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
      * 请求Authorize访问地址
      */
     public function getAuthorizeURL() {
-        setcookie('A_S', NOW_TIME, 600);
+        setcookie('A_S', $this->timestamp, 600);
         $this->initConfig();
         //Oauth 标准参数
         $params = array(
@@ -42,7 +42,7 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
             'redirect_uri'  => $this->config['callback'],
             'response_type' => $this->config['response_type'],
             'scope'         => $this->config['scope'],
-            'state'         => NOW_TIME,
+            'state'         => $this->timestamp,
         );
         return $this->AuthorizeURL . '?' . http_build_query($params) . '#wechat_redirect';
     }

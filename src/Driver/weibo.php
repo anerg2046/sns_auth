@@ -31,13 +31,13 @@ class weibo extends \anerg\OAuth2\OAuth {
     protected $ApiBase = 'https://api.weibo.com/2/';
 
     public function getAuthorizeURL() {
-        setcookie('A_S', NOW_TIME, 600);
+        setcookie('A_S', $this->timestamp, 600);
         $this->initConfig();
         //Oauth 标准参数
         $params = array(
             'client_id'    => $this->config['app_key'],
             'redirect_uri' => $this->config['callback'],
-            'state'        => NOW_TIME,
+            'state'        => $this->timestamp,
             'scope'        => $this->config['scope'],
             'display'      => $this->display
         );
