@@ -29,6 +29,8 @@ class SnsLogin {
     /**
      * 此处应当考虑使用空控制器来简化代码
      * 同时应当考虑对第三方渠道名称进行检查
+     * $config配置参数应当放在配置文件中
+     * callback对应了普通PC版的返回页面和移动版的页面
      */
     public function qq() {
         $config = [
@@ -56,5 +58,6 @@ class SnsLogin {
     }
 
 }
+
 
 ```
