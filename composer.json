@@ -3,6 +3,7 @@
     "description": "weixin weibo qq sns oauth",
     "type": "library",
     "license": "MIT",
+    "version": "1.0.1",
     "authors": [
         {
             "name": "Coeus",
