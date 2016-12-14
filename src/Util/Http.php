@@ -28,7 +28,7 @@ class Http {
 
     public static function request($url, $data, $method) {
         $method = strtolower($method);
-        self::$method($url, $data);
+        return self::$method($url, $data);
     }
 
     public static function get($url, $data) {
