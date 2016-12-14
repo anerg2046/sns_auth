@@ -17,7 +17,7 @@ composer require anerg2046/sns_auth
 ## 典型用法
 >以ThinkPHP5为例
 
-```
+```php
 <?php
 namespace app\web\controller;
 
