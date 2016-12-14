@@ -65,13 +65,13 @@ abstract class OAuth {
     /**
      * 获取第三方OAuth登陆实例
      */
-    static function getInstance($type = '') {
+    static function getInstance($config, $type = '') {
         static $_instance = array();
 
         $type = strtolower($type);
         if (!isset($_instance[$type])) {
             $class            = '\\anerg\\OAuth2\\Driver\\' . $type;
-            $_instance[$type] = new $class();
+            $_instance[$type] = new $class($config);
         }
         return $_instance[$type];
     }
