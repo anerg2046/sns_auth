@@ -7,9 +7,10 @@
  */
 
 namespace anerg\OAuth2\Driver;
+
 use anerg\OAuth2\Util\Http;
 
-class weixin extends \anerg\OAuth {
+class weixin extends \anerg\OAuth2\OAuth {
 
     /**
      * 获取requestCode的api接口
