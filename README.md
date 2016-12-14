@@ -19,12 +19,17 @@ composer require anerg2046/sns_auth
 
 ```php
 <?php
+
 namespace app\web\controller;
 
 use anerg\OAuth2\OAuth;
 
 class SnsLogin {
 
+    /**
+     * 此处应当考虑使用空控制器来简化代码
+     * 同时应当考虑对第三方渠道名称进行检查
+     */
     public function qq() {
         $config = [
             'app_key'    => 'xxxxxx',
@@ -36,7 +41,7 @@ class SnsLogin {
             ]
         ];
         $OAuth  = OAuth::getInstance($config, 'qq');
-        $OAuth->setDisplay('mobile');//此处为可选,若没有设置为mobile,则跳转的授权页面可能不适合手机浏览器访问
+        $OAuth->setDisplay('mobile'); //此处为可选,若没有设置为mobile,则跳转的授权页面可能不适合手机浏览器访问
         return redirect($OAuth->getAuthorizeURL());
     }
 
@@ -51,4 +56,5 @@ class SnsLogin {
     }
 
 }
+
 ```
