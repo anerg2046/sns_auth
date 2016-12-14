@@ -59,6 +59,12 @@ class SnsLogin {
         ];
         $OAuth    = OAuth::getInstance($config, $channel);
         $OAuth->getAccessToken();
+        /**
+         * 在获取access_token的时候可以考虑忽略你传递的state参数
+         * 此参数使用cookie保存并验证
+         */
+//        $ignore_stat = true;
+//        $OAuth->getAccessToken(true);
         $sns_info = $OAuth->userinfo();
         /**
          * 此处获取了sns提供的用户数据
