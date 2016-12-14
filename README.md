@@ -48,7 +48,16 @@ class SnsLogin {
     }
 
     public function callback($channel) {
-        $OAuth    = OAuth::getInstance($channel);
+        $config   = [
+            'app_key'    => 'xxxxxx',
+            'app_secret' => 'xxxxxxxxxxxxxxxxxxxx',
+            'scope'      => 'get_user_info',
+            'callback'   => [
+                'default' => 'http://xxx.com/sns_login/callback/qq',
+                'mobile'  => 'http://h5.xxx.com/sns_login/callback/qq',
+            ]
+        ];
+        $OAuth    = OAuth::getInstance($config, $channel);
         $OAuth->getAccessToken();
         $sns_info = $OAuth->userinfo();
         /**
@@ -58,6 +67,4 @@ class SnsLogin {
     }
 
 }
-
-
 ```
