@@ -9,7 +9,6 @@
             "email": "r.anerg@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.6.0"
     },
