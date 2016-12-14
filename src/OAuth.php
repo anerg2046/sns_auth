@@ -2,6 +2,7 @@
 
 /**
  * 第三方登陆实例抽象类
+ * 
  * @author Coeus <r.anerg@gmail.com>
  */
 
