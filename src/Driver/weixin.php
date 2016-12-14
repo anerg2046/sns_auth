@@ -9,6 +9,7 @@
 namespace anerg\OAuth2\Driver;
 
 use anerg\OAuth2\Util\Http;
+use anerg\OAuth2\Util\Exception;
 
 class weixin extends \anerg\OAuth2\OAuth {
 

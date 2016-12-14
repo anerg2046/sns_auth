@@ -9,6 +9,7 @@
 namespace anerg\OAuth2;
 
 use anerg\OAuth2\Util\Http;
+use anerg\OAuth2\Util\Exception;
 
 abstract class OAuth {
 
