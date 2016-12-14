@@ -10,7 +10,7 @@ namespace anerg\OAuth2\Driver;
 
 use anerg\OAuth2\Util\Http;
 
-class wx_qrcode extends \anerg\OAuth2 {
+class wx_qrcode extends \anerg\OAuth {
 
     /**
      * 获取requestCode的api接口

@@ -10,7 +10,7 @@ namespace anerg\OAuth2\Driver;
 
 use anerg\OAuth2\Util\Http;
 
-class qq extends \anerg\OAuth2 {
+class qq extends \anerg\OAuth {
 
     /**
      * 获取requestCode的api接口

@@ -10,7 +10,7 @@ namespace anerg\OAuth2\Driver;
 
 use anerg\OAuth2\Util\Http;
 
-class weibo extends \anerg\OAuth2 {
+class weibo extends \anerg\OAuth {
 
     /**
      * 获取requestCode的api接口
