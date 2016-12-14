@@ -43,7 +43,7 @@ class qq extends \anerg\OAuth2\OAuth {
             'redirect_uri'  => $this->config['callback'],
             'state'         => $this->timestamp,
             'scope'         => $this->config['scope'],
-            'display'       => $this->Display
+            'display'       => $this->display
         );
         return $this->AuthorizeURL . '?' . http_build_query($params);
     }
