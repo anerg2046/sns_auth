@@ -140,7 +140,7 @@ abstract class OAuth {
             $params      = $this->_params();
             $data        = Http::post($this->AccessTokenURL, $params);
             $this->token = $this->parseToken($data);
-            setcookie('A_S', null);
+            setcookie('A_S', $this->timestamp, $this->timestamp - 600, '/');
             return $this->token;
         }
     }
