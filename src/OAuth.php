@@ -134,7 +134,7 @@ abstract class OAuth {
      * 获取access_token
      */
     public function getAccessToken($ignore_stat = false) {
-        if ($ignore_stat === false && $_GET['state'] != $_COOKIE['A_S']) {
+        if ($ignore_stat === false && isset($_COOKIE['A_S']) && $_GET['state'] != $_COOKIE['A_S']) {
             throw new Exception('传递的STATE参数不匹配！');
         } else {
             $this->initConfig();
