@@ -8,8 +8,7 @@
 
 namespace anerg\OAuth2\Driver;
 
-use anerg\OAuth2\Util\Http;
-use anerg\OAuth2\Util\Exception;
+use anerg\helper\Http;
 
 class qq extends \anerg\OAuth2\OAuth {
 
@@ -80,7 +79,7 @@ class qq extends \anerg\OAuth2\OAuth {
             $data['openid'] = $this->openid();
             return $data;
         } else {
-            throw new Exception("获取腾讯QQ ACCESS_TOKEN 出错：{$result}");
+            exception("获取腾讯QQ ACCESS_TOKEN 出错：{$result}");
         }
     }
 
@@ -98,10 +97,10 @@ class qq extends \anerg\OAuth2\OAuth {
             if (isset($data['openid'])) {
                 return $data['openid'];
             } else {
-                throw new Exception("获取用户openid出错：{$data['error_description']}");
+                exception("获取用户openid出错：{$data['error_description']}");
             }
         } else {
-            throw new Exception('没有获取到openid！');
+            exception('没有获取到openid！');
         }
     }
 
@@ -111,7 +110,7 @@ class qq extends \anerg\OAuth2\OAuth {
     public function userinfo() {
         $rsp = $this->call('user/get_user_info');
         if (!$rsp || $rsp['ret'] != 0) {
-            throw new Exception('接口访问失败！' . $rsp['msg']);
+            exception('接口访问失败！' . $rsp['msg']);
         } else {
             $userinfo = array(
                 'openid'  => $this->openid(),

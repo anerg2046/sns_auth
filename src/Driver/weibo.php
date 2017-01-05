@@ -8,8 +8,7 @@
 
 namespace anerg\OAuth2\Driver;
 
-use anerg\OAuth2\Util\Http;
-use anerg\OAuth2\Util\Exception;
+use anerg\helper\Http;
 
 class weibo extends \anerg\OAuth2\OAuth {
 
@@ -69,7 +68,7 @@ class weibo extends \anerg\OAuth2\OAuth {
             unset($data['uid']);
             return $data;
         } else {
-            throw new Exception("获取新浪微博ACCESS_TOKEN出错：{$data['error']}");
+            exception("获取新浪微博ACCESS_TOKEN出错：{$data['error']}");
         }
     }
 
@@ -82,7 +81,7 @@ class weibo extends \anerg\OAuth2\OAuth {
         if (isset($data['openid']))
             return $data['openid'];
         else
-            throw new Exception('没有获取到新浪微博用户ID！');
+            exception('没有获取到新浪微博用户ID！');
     }
 
     /**
@@ -91,7 +90,7 @@ class weibo extends \anerg\OAuth2\OAuth {
     public function userinfo() {
         $rsp = $this->call('users/show', 'uid=' . $this->openid());
         if (isset($rsp['error_code'])) {
-            throw new Exception('接口访问失败！' . $rsp['error']);
+            exception('接口访问失败！' . $rsp['error']);
         } else {
             $userinfo = array(
                 'openid'  => $this->openid(),

@@ -8,8 +8,7 @@
 
 namespace anerg\OAuth2;
 
-use anerg\OAuth2\Util\Http;
-use anerg\OAuth2\Util\Exception;
+use anerg\helper\Http;
 
 abstract class OAuth {
 
@@ -51,7 +50,7 @@ abstract class OAuth {
 
     private function __construct($config = null) {
         if (empty($config) || !array_key_exists('app_key', $config) || !array_key_exists('app_secret', $config) || !array_key_exists('callback', $config) || !array_key_exists('scope', $config)) {
-            throw new Exception('请配置申请的APP_KEY和APP_SECRET');
+            exception('请配置申请的APP_KEY和APP_SECRET');
         }
         $class           = get_class($this);
         $cls_arr         = explode('\\', $class);
@@ -135,7 +134,7 @@ abstract class OAuth {
      */
     public function getAccessToken($ignore_stat = false) {
         if ($ignore_stat === false && isset($_COOKIE['A_S']) && $_GET['state'] != $_COOKIE['A_S']) {
-            throw new Exception('传递的STATE参数不匹配！');
+            exception('传递的STATE参数不匹配！');
         } else {
             $this->initConfig();
             $params      = $this->_params();

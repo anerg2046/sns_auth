@@ -8,8 +8,8 @@
 
 namespace anerg\OAuth2\Driver;
 
-use anerg\OAuth2\Util\Http;
-use anerg\OAuth2\Util\Exception;
+use anerg\helper\Http;
+
 
 class weixin extends \anerg\OAuth2\OAuth {
 
@@ -90,7 +90,7 @@ class weixin extends \anerg\OAuth2\OAuth {
         if ($data['access_token'] && $data['expires_in'] && $data['openid']) {
             return $data;
         } else {
-            throw new Exception("获取微信 ACCESS_TOKEN 出错：{$result}");
+            exception("获取微信 ACCESS_TOKEN 出错：{$result}");
         }
     }
 
@@ -103,7 +103,7 @@ class weixin extends \anerg\OAuth2\OAuth {
         if (isset($data['openid']))
             return $data['openid'];
         else
-            throw new Exception('没有获取到微信用户ID！');
+            exception('没有获取到微信用户ID！');
     }
 
     /**
@@ -112,7 +112,7 @@ class weixin extends \anerg\OAuth2\OAuth {
     public function userinfo() {
         $rsp = $this->call('userinfo');
         if (!$rsp || (isset($rsp['errcode']) && $rsp['errcode'] != 0)) {
-            throw new Exception('接口访问失败！' . $rsp['errmsg']);
+            exception('接口访问失败！' . $rsp['errmsg']);
         } else {
             $userinfo = array(
                 'openid'  => $this->token['openid'],
@@ -128,7 +128,7 @@ class weixin extends \anerg\OAuth2\OAuth {
     public function userinfo_all() {
         $rsp = $this->call('userinfo');
         if (!$rsp || (isset($rsp['errcode']) && $rsp['errcode'] != 0)) {
-            throw new Exception('接口访问失败！' . $rsp['errmsg']);
+            exception('接口访问失败！' . $rsp['errmsg']);
         } else {
             return $rsp;
         }
