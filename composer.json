@@ -12,7 +12,7 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "anerg/helper": "^1.0"
+        "anerg2046/helper": "^1.0"
     },
     "autoload": {
         "psr-4": {
