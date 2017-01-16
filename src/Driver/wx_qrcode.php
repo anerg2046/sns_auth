@@ -118,7 +118,8 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
                 'unionid' => isset($this->token['unionid']) ? $this->token['unionid'] : '',
                 'channel' => 'weixin_qrcode',
                 'nick'    => $rsp['nickname'],
-                'gender'  => $rsp['sex'] == 1 ? 'm' : 'f'
+                'gender'  => $this->getGender($rsp['sex']),
+                'avatar'  => $rsp['headimgurl']
             );
             return $userinfo;
         }
@@ -131,6 +132,21 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
         } else {
             return $rsp;
         }
+    }
+
+    private function getGender($gender) {
+        $return = null;
+        switch ($gender) {
+            case 1:
+                $return = 'm';
+                break;
+            case 2:
+                $return = 'f';
+                break;
+            default :
+                $return = 'n';
+        }
+        return $return;
     }
 
 }

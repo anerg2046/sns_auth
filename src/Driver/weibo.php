@@ -96,7 +96,8 @@ class weibo extends \anerg\OAuth2\OAuth {
                 'openid'  => $this->openid(),
                 'channel' => 'weibo',
                 'nick'    => $rsp['screen_name'],
-                'gender'  => $rsp['gender']
+                'gender'  => $rsp['gender'],
+                'avatar'  => $rsp['avatar_hd']
             );
             return $userinfo;
         }

@@ -115,7 +115,9 @@ class qq extends \anerg\OAuth2\OAuth {
             $userinfo = array(
                 'openid'  => $this->openid(),
                 'channel' => 'qq',
-                'nick'    => $rsp['nickname']
+                'nick'    => $rsp['nickname'],
+                'gender'  => $rsp['gender'] == "男" ? 'm' : 'f',
+                'avatar'  => $rsp['figureurl_qq_2'] ? $rsp['figureurl_qq_2'] : $rsp['figureurl_qq_1']
             );
             return $userinfo;
         }
