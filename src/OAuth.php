@@ -40,7 +40,7 @@ abstract class OAuth {
      * 接口渠道
      * @var type String
      */
-    private $channel   = '';
+    private $channel = '';
 
     /**
      * 当前时间戳
@@ -133,7 +133,7 @@ abstract class OAuth {
      * 获取access_token
      */
     public function getAccessToken($ignore_stat = false) {
-        if ($ignore_stat === false && isset($_COOKIE['A_S']) && $_GET['state'] != $_COOKIE['A_S']) {
+        if ($ignore_stat === false && (!isset($_COOKIE['A_S']) || $_GET['state'] != $_COOKIE['A_S'])) {
             exception('传递的STATE参数不匹配！');
         } else {
             $this->initConfig();
