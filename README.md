@@ -35,7 +35,7 @@ class SnsLogin {
      */
     public function qq() {
         $config = [
-            'app_key'    => 'xxxxxx',
+            'app_id'    => 'xxxxxx',
             'app_secret' => 'xxxxxxxxxxxxxxxxxxxx',
             'scope'      => 'get_user_info',
             'callback'   => [
@@ -50,7 +50,7 @@ class SnsLogin {
 
     public function callback($channel) {
         $config   = [
-            'app_key'    => 'xxxxxx',
+            'app_id'    => 'xxxxxx',
             'app_secret' => 'xxxxxxxxxxxxxxxxxxxx',
             'scope'      => 'get_user_info',
             'callback'   => [

@@ -35,7 +35,7 @@ class weibo extends \anerg\OAuth2\OAuth {
         $this->initConfig();
         //Oauth 标准参数
         $params = array(
-            'client_id'    => $this->config['app_key'],
+            'client_id'    => $this->config['app_id'],
             'redirect_uri' => $this->config['callback'],
             'state'        => $this->timestamp,
             'scope'        => $this->config['scope'],

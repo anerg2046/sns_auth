@@ -38,7 +38,7 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
         $this->initConfig();
         //Oauth 标准参数
         $params = array(
-            'appid'         => $this->config['app_key'],
+            'appid'         => $this->config['app_id'],
             'redirect_uri'  => $this->config['callback'],
             'response_type' => $this->config['response_type'],
             'scope'         => $this->config['scope'],
@@ -53,7 +53,7 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
      */
     protected function _params() {
         $params = array(
-            'appid'      => $this->config['app_key'],
+            'appid'      => $this->config['app_id'],
             'secret'     => $this->config['app_secret'],
             'grant_type' => $this->config['grant_type'],
             'code'       => $_GET['code'],

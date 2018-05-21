@@ -10,7 +10,8 @@ namespace anerg\OAuth2;
 
 use anerg\helper\Http;
 
-abstract class OAuth {
+abstract class OAuth
+{
 
     /**
      * 第三方配置属性
@@ -48,9 +49,10 @@ abstract class OAuth {
      */
     protected $timestamp = '';
 
-    private function __construct($config = null) {
-        if (empty($config) || !array_key_exists('app_key', $config) || !array_key_exists('app_secret', $config) || !array_key_exists('callback', $config) || !array_key_exists('scope', $config)) {
-            exception('请配置申请的APP_KEY和APP_SECRET');
+    private function __construct($config = null)
+    {
+        if (empty($config) || !array_key_exists('app_id', $config) || !array_key_exists('app_secret', $config) || !array_key_exists('callback', $config) || !array_key_exists('scope', $config)) {
+            exception('请配置申请的APP_ID和APP_SECRET');
         }
         $class           = get_class($this);
         $cls_arr         = explode('\\', $class);
@@ -64,7 +66,8 @@ abstract class OAuth {
      * 设置授权页面样式，PC或者Mobile
      * @param type $display
      */
-    public function setDisplay($display) {
+    public function setDisplay($display)
+    {
         if (in_array($display, array('default', 'mobile'))) {
             $this->display = $display;
         }
@@ -73,7 +76,8 @@ abstract class OAuth {
     /**
      * 获取第三方OAuth登陆实例
      */
-    static function getInstance($config, $type = '') {
+    public static function getInstance($config, $type = '')
+    {
         static $_instance = array();
 
         $type = strtolower($type);
@@ -87,7 +91,8 @@ abstract class OAuth {
     /**
      * 初始化一些特殊配置
      */
-    protected function initConfig() {
+    protected function initConfig()
+    {
         $this->config['callback'] = $this->config['callback'][$this->display];
     }
 
@@ -97,7 +102,8 @@ abstract class OAuth {
      * @param array/string $param 额外参数
      * @return array:
      */
-    protected function param($params, $param) {
+    protected function param($params, $param)
+    {
         if (is_string($param)) {
             parse_str($param, $param);
         }
@@ -108,9 +114,10 @@ abstract class OAuth {
      * 默认的AccessToken请求参数
      * @return type
      */
-    protected function _params() {
+    protected function _params()
+    {
         $params = array(
-            'client_id'     => $this->config['app_key'],
+            'client_id'     => $this->config['app_id'],
             'client_secret' => $this->config['app_secret'],
             'grant_type'    => $this->config['grant_type'],
             'code'          => $_GET['code'],
@@ -125,14 +132,16 @@ abstract class OAuth {
      * @param  string $fix api后缀
      * @return string      请求的完整URL
      */
-    protected function url($api, $fix = '') {
+    protected function url($api, $fix = '')
+    {
         return $this->ApiBase . $api . $fix;
     }
 
     /**
      * 获取access_token
      */
-    public function getAccessToken($ignore_stat = false) {
+    public function getAccessToken($ignore_stat = false)
+    {
         if ($ignore_stat === false && (!isset($_COOKIE['A_S']) || $_GET['state'] != $_COOKIE['A_S'])) {
             exception('传递的STATE参数不匹配！');
         } else {

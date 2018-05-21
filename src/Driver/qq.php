@@ -39,7 +39,7 @@ class qq extends \anerg\OAuth2\OAuth {
         //Oauth 标准参数
         $params = array(
             'response_type' => $this->config['response_type'],
-            'client_id'     => $this->config['app_key'],
+            'client_id'     => $this->config['app_id'],
             'redirect_uri'  => $this->config['callback'],
             'state'         => $this->timestamp,
             'scope'         => $this->config['scope'],
@@ -58,7 +58,7 @@ class qq extends \anerg\OAuth2\OAuth {
     public function call($api, $param = '', $method = 'GET') {
         /* 腾讯QQ调用公共参数 */
         $params = array(
-            'oauth_consumer_key' => $this->config['app_key'],
+            'oauth_consumer_key' => $this->config['app_id'],
             'access_token'       => $this->token['access_token'],
             'openid'             => $this->openid(),
             'format'             => 'json'
