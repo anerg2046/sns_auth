@@ -10,7 +10,8 @@ namespace anerg\OAuth2\Driver;
 
 use anerg\helper\Http;
 
-class weibo extends \anerg\OAuth2\OAuth {
+class weibo extends \anerg\OAuth2\OAuth
+{
 
     /**
      * 获取requestCode的api接口
@@ -30,7 +31,8 @@ class weibo extends \anerg\OAuth2\OAuth {
      */
     protected $ApiBase = 'https://api.weibo.com/2/';
 
-    public function getAuthorizeURL() {
+    public function getAuthorizeURL()
+    {
         setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
         $this->initConfig();
         //Oauth 标准参数
@@ -39,19 +41,21 @@ class weibo extends \anerg\OAuth2\OAuth {
             'redirect_uri' => $this->config['callback'],
             'state'        => $this->timestamp,
             'scope'        => $this->config['scope'],
-            'display'      => $this->display
+            'display'      => $this->display,
         );
         return $this->AuthorizeURL . '?' . http_build_query($params);
     }
 
-    protected function initConfig() {
+    protected function initConfig()
+    {
         parent::initConfig();
         if ($this->display == 'mobile') {
             $this->AuthorizeURL = 'https://open.weibo.cn/oauth2/authorize';
         }
     }
 
-    public function call($api, $param = '', $method = 'GET') {
+    public function call($api, $param = '', $method = 'GET')
+    {
         /* 腾讯QQ调用公共参数 */
         $params = array(
             'access_token' => $this->token['access_token'],
@@ -61,7 +65,8 @@ class weibo extends \anerg\OAuth2\OAuth {
         return json_decode($data, true);
     }
 
-    protected function parseToken($result) {
+    protected function parseToken($result)
+    {
         $data = json_decode($result, true);
         if ($data['access_token'] && $data['expires_in'] && $data['remind_in'] && $data['uid']) {
             $data['openid'] = $data['uid'];
@@ -76,18 +81,22 @@ class weibo extends \anerg\OAuth2\OAuth {
      * 获取当前授权应用的openid
      * @return string
      */
-    public function openid() {
+    public function openid()
+    {
         $data = $this->token;
-        if (isset($data['openid']))
+        if (isset($data['openid'])) {
             return $data['openid'];
-        else
+        } else {
             exception('没有获取到新浪微博用户ID！');
+        }
+
     }
 
     /**
      * 获取授权用户的用户信息
      */
-    public function userinfo() {
+    public function userinfo()
+    {
         $rsp = $this->call('users/show', 'uid=' . $this->openid());
         if (isset($rsp['error_code'])) {
             exception('接口访问失败！' . $rsp['error']);
@@ -97,7 +106,7 @@ class weibo extends \anerg\OAuth2\OAuth {
                 'channel' => 'weibo',
                 'nick'    => $rsp['screen_name'],
                 'gender'  => $rsp['gender'],
-                'avatar'  => $rsp['avatar_hd']
+                'avatar'  => $rsp['avatar_hd'],
             );
             return $userinfo;
         }

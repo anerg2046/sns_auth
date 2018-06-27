@@ -10,7 +10,8 @@ namespace anerg\OAuth2\Driver;
 
 use anerg\helper\Http;
 
-class qq extends \anerg\OAuth2\OAuth {
+class qq extends \anerg\OAuth2\OAuth
+{
 
     /**
      * 获取requestCode的api接口
@@ -33,7 +34,8 @@ class qq extends \anerg\OAuth2\OAuth {
     /**
      * 请求Authorize访问地址
      */
-    public function getAuthorizeURL() {
+    public function getAuthorizeURL()
+    {
         setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
         $this->initConfig();
         //Oauth 标准参数
@@ -43,7 +45,7 @@ class qq extends \anerg\OAuth2\OAuth {
             'redirect_uri'  => $this->config['callback'],
             'state'         => $this->timestamp,
             'scope'         => $this->config['scope'],
-            'display'       => $this->display
+            'display'       => $this->display,
         );
         return $this->AuthorizeURL . '?' . http_build_query($params);
     }
@@ -55,13 +57,14 @@ class qq extends \anerg\OAuth2\OAuth {
      * @param  string $method HTTP请求方法 默认为GET
      * @return json
      */
-    public function call($api, $param = '', $method = 'GET') {
+    public function call($api, $param = '', $method = 'GET')
+    {
         /* 腾讯QQ调用公共参数 */
         $params = array(
             'oauth_consumer_key' => $this->config['app_id'],
             'access_token'       => $this->token['access_token'],
             'openid'             => $this->openid(),
-            'format'             => 'json'
+            'format'             => 'json',
         );
 
         $data = Http::request($this->url($api), $this->param($params, $param), $method);
@@ -72,7 +75,8 @@ class qq extends \anerg\OAuth2\OAuth {
      * 解析access_token方法请求后的返回值
      * @param string $result 获取access_token的方法的返回值
      */
-    protected function parseToken($result) {
+    protected function parseToken($result)
+    {
         parse_str($result, $data);
         if ($data['access_token'] && $data['expires_in']) {
             $this->token    = $data;
@@ -87,7 +91,8 @@ class qq extends \anerg\OAuth2\OAuth {
      * 获取当前授权应用的openid
      * @return string
      */
-    public function openid() {
+    public function openid()
+    {
         $data = $this->token;
         if (isset($data['openid'])) {
             return $data['openid'];
@@ -107,7 +112,8 @@ class qq extends \anerg\OAuth2\OAuth {
     /**
      * 获取授权用户的用户信息
      */
-    public function userinfo() {
+    public function userinfo()
+    {
         $rsp = $this->call('user/get_user_info');
         if (!$rsp || $rsp['ret'] != 0) {
             exception('接口访问失败！' . $rsp['msg']);
@@ -117,7 +123,7 @@ class qq extends \anerg\OAuth2\OAuth {
                 'channel' => 'qq',
                 'nick'    => $rsp['nickname'],
                 'gender'  => $rsp['gender'] == "男" ? 'm' : 'f',
-                'avatar'  => $rsp['figureurl_qq_2'] ? $rsp['figureurl_qq_2'] : $rsp['figureurl_qq_1']
+                'avatar'  => $rsp['figureurl_qq_2'] ? $rsp['figureurl_qq_2'] : $rsp['figureurl_qq_1'],
             );
             return $userinfo;
         }

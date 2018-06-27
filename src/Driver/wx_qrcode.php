@@ -10,7 +10,8 @@ namespace anerg\OAuth2\Driver;
 
 use anerg\helper\Http;
 
-class wx_qrcode extends \anerg\OAuth2\OAuth {
+class wx_qrcode extends \anerg\OAuth2\OAuth
+{
 
     /**
      * 获取requestCode的api接口
@@ -33,7 +34,8 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
     /**
      * 请求Authorize访问地址
      */
-    public function getAuthorizeURL() {
+    public function getAuthorizeURL()
+    {
         setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
         $this->initConfig();
         //Oauth 标准参数
@@ -51,7 +53,8 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
      * 默认的AccessToken请求参数
      * @return type
      */
-    protected function _params() {
+    protected function _params()
+    {
         $params = array(
             'appid'      => $this->config['app_id'],
             'secret'     => $this->config['app_secret'],
@@ -68,12 +71,13 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
      * @param  string $method HTTP请求方法 默认为GET
      * @return json
      */
-    public function call($api, $param = '', $method = 'GET') {
+    public function call($api, $param = '', $method = 'GET')
+    {
         /* 微信调用公共参数 */
         $params = array(
             'access_token' => $this->token['access_token'],
             'openid'       => $this->openid(),
-            'lang'         => 'zh_CN'
+            'lang'         => 'zh_CN',
         );
 
         $data = Http::request($this->url($api), $params, $method);
@@ -84,7 +88,8 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
      * 解析access_token方法请求后的返回值
      * @param string $result 获取access_token的方法的返回值
      */
-    protected function parseToken($result) {
+    protected function parseToken($result)
+    {
         $data = json_decode($result, true);
         if ($data['access_token'] && $data['expires_in'] && $data['openid']) {
             return $data;
@@ -97,18 +102,22 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
      * 获取当前授权应用的openid
      * @return string
      */
-    public function openid() {
+    public function openid()
+    {
         $data = $this->token;
-        if (isset($data['openid']))
+        if (isset($data['openid'])) {
             return $data['openid'];
-        else
+        } else {
             exception('没有获取到微信用户ID！');
+        }
+
     }
 
     /**
      * 获取授权用户的用户信息
      */
-    public function userinfo() {
+    public function userinfo()
+    {
         $rsp = $this->call('userinfo');
         if (!$rsp || (isset($rsp['errcode']) && $rsp['errcode'] != 0)) {
             exception('接口访问失败！' . $rsp['errmsg']);
@@ -119,13 +128,14 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
                 'channel' => 'weixin_qrcode',
                 'nick'    => $rsp['nickname'],
                 'gender'  => $this->getGender($rsp['sex']),
-                'avatar'  => $rsp['headimgurl']
+                'avatar'  => $rsp['headimgurl'],
             );
             return $userinfo;
         }
     }
 
-    public function userinfo_all() {
+    public function userinfo_all()
+    {
         $rsp = $this->call('userinfo');
         if (!$rsp || (isset($rsp['errcode']) && $rsp['errcode'] != 0)) {
             exception('接口访问失败！' . $rsp['errmsg']);
@@ -134,7 +144,8 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
         }
     }
 
-    private function getGender($gender) {
+    private function getGender($gender)
+    {
         $return = null;
         switch ($gender) {
             case 1:
@@ -143,7 +154,7 @@ class wx_qrcode extends \anerg\OAuth2\OAuth {
             case 2:
                 $return = 'f';
                 break;
-            default :
+            default:
                 $return = 'n';
         }
         return $return;
