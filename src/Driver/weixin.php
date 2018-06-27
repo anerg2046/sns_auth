@@ -50,6 +50,24 @@ class weixin extends \anerg\OAuth2\OAuth
     }
 
     /**
+     * 获取中转代理地址
+     */
+    public function getProxyURL($proxy_url)
+    {
+        setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
+        $this->initConfig();
+        //Oauth 标准参数
+        $params = array(
+            'appid'         => $this->config['app_id'],
+            'response_type' => $this->config['response_type'],
+            'scope'         => $this->config['scope'],
+            'state'         => $this->timestamp,
+            'return_uri'    => $this->config['callback'],
+        );
+        return $proxy_url . '?' . http_build_query($params);
+    }
+
+    /**
      * 默认的AccessToken请求参数
      * @return type
      */
