@@ -41,4 +41,4 @@ class WxProxy
     }
 }
 
-$app = new WxProxy();
+new WxProxy();
