@@ -40,3 +40,5 @@ class WxProxy
         return false;
     }
 }
+
+$app = new WxProxy();
