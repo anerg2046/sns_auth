@@ -4,20 +4,20 @@ class WxProxy
 {
     protected $AuthorizeURL = 'https://open.weixin.qq.com/connect/oauth2/authorize';
 
-    public function __construct()
+    public function run()
     {
         if (isset($_GET['code'])) {
             header('Location: ' . $_COOKIE['return_uri'] . '?code=' . $_GET['code'] . '&state=' . $_GET['state']);
         } else {
             $protocol = $this->is_HTTPS() ? 'https://' : 'http://';
             $params   = array(
-                'appid'         => $_GET['app_id'],
-                'redirect_uri'  => $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+                'appid'         => $_GET['appid'],
+                'redirect_uri'  => $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['DOCUMENT_URI'],
                 'response_type' => $_GET['response_type'],
                 'scope'         => $_GET['scope'],
                 'state'         => $_GET['state'],
             );
-            setcookie('return_uri', $_GET['return_uri'], $_SERVER['REQUEST_TIME'] + 60, '/');
+            setcookie('return_uri', urldecode($_GET['return_uri']), $_SERVER['REQUEST_TIME'] + 60, '/');
             header('Location: ' . $this->AuthorizeURL . '?' . http_build_query($params) . '#wechat_redirect');
         }
     }
@@ -41,4 +41,5 @@ class WxProxy
     }
 }
 
-new WxProxy();
+$app = new WxProxy();
+$app->run();
