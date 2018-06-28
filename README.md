@@ -55,7 +55,7 @@ class SnsLogin {
         $config   = [
             'app_id'    => 'xxxxxx',
             'app_secret' => 'xxxxxxxxxxxxxxxxxxxx',
-            'scope'      => 'snsapi_base',
+            'scope'      => 'get_user_info',
             'callback'   => [
                 'default' => 'http://xxx.com/sns_login/callback/qq',
                 'mobile'  => 'http://h5.xxx.com/sns_login/callback/qq',
@@ -94,7 +94,7 @@ class SnsLogin {
     $config = [
         'app_id'    => 'xxxxxx',
         'app_secret' => 'xxxxxxxxxxxxxxxxxxxx',
-        'scope'      => 'get_user_info',
+        'scope'      => 'snsapi_base',
         'proxy_url'  => 'http://www.abc.com/proxy/wx_proxy.php',
         'callback'   => [
             'default' => 'http://xxx.com/sns_login/callback/qq',
