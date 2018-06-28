@@ -55,7 +55,7 @@ class SnsLogin {
         $config   = [
             'app_id'    => 'xxxxxx',
             'app_secret' => 'xxxxxxxxxxxxxxxxxxxx',
-            'scope'      => 'get_user_info',
+            'scope'      => 'snsapi_base',
             'callback'   => [
                 'default' => 'http://xxx.com/sns_login/callback/qq',
                 'mobile'  => 'http://h5.xxx.com/sns_login/callback/qq',
