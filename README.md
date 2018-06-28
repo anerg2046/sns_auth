@@ -8,6 +8,9 @@
 
 >微信可获取unionid（如有）
 
+## update 2018-06-28
+** 现在支持微信公众号多域名登录 **
+
 ## 安装方法
 ```
 composer require anerg2046/sns_auth
