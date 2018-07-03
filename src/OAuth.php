@@ -51,9 +51,6 @@ abstract class OAuth
 
     private function __construct($config = null)
     {
-        if (empty($config) || !array_key_exists('app_id', $config) || !array_key_exists('app_secret', $config) || !array_key_exists('callback', $config) || !array_key_exists('scope', $config)) {
-            exception('请配置申请的APP_ID和APP_SECRET');
-        }
         $class           = get_class($this);
         $cls_arr         = explode('\\', $class);
         $this->channel   = strtoupper(end($cls_arr));
