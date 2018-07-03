@@ -8,6 +8,23 @@
 
 >微信可获取unionid（如有）
 
+## update 2018-07-03
+*现在支持支付宝登录
+
+```php
+//支付宝配置参数
+$config = [
+    'app_id'      => '********',
+    'scope'       => 'auth_user',
+    'pem_private' => 'pathto/private.pem', // 你的私钥
+    'pem_public'  => 'pathto/public.pem', // 支付宝公钥
+    'callback'    => [
+        'default' => 'http://user.abc.cn/sns/alipay',
+        'mobile'  => 'http://user.abc.cn/sns/alipay',
+        ],
+    ];
+```
+
 ## update 2018-06-28
 **现在支持微信公众号多域名登录**
 
