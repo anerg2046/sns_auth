@@ -10,7 +10,7 @@ namespace anerg\OAuth2\Driver;
 
 use anerg\helper\Http;
 
-class weixin extends \anerg\OAuth2\OAuth
+class alipay extends \anerg\OAuth2\OAuth
 {
     const RSA_PRIVATE = 1;
     const RSA_PUBLIC  = 2;
@@ -126,7 +126,7 @@ class weixin extends \anerg\OAuth2\OAuth
 
     /**
      * 组装接口调用参数 并调用接口
-     * @param  string $api    微博API
+     * @param  string $api    支付宝API方法
      * @param  string $param  调用API的额外参数
      * @param  string $method HTTP请求方法 默认为GET
      * @return json
