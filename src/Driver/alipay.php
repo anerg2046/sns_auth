@@ -145,6 +145,7 @@ class alipay extends \anerg\OAuth2\OAuth
         $params['sign'] = $this->signature($params);
 
         $data = Http::request($this->ApiBase, $params, $method);
+        $data = mb_convert_encoding($data, 'utf-8', 'gbk');
         return json_decode($data, true);
     }
 
