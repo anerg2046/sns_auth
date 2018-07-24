@@ -8,7 +8,7 @@
 
 namespace anerg\OAuth2\Driver;
 
-use anerg\helper\Http;
+use anerg\OAuth2\Http;
 
 class weibo extends \anerg\OAuth2\OAuth
 {

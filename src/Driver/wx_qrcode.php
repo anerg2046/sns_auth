@@ -8,7 +8,7 @@
 
 namespace anerg\OAuth2\Driver;
 
-use anerg\helper\Http;
+use anerg\OAuth2\Http;
 
 class wx_qrcode extends \anerg\OAuth2\OAuth
 {
@@ -110,7 +110,6 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
         } else {
             exception('没有获取到微信用户ID！');
         }
-
     }
 
     /**

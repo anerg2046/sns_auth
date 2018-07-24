@@ -8,8 +8,6 @@
 
 namespace anerg\OAuth2;
 
-use anerg\helper\Http;
-
 abstract class OAuth
 {
 
