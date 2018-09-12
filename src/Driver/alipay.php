@@ -54,7 +54,7 @@ class alipay extends \anerg\OAuth2\OAuth
      * 默认的AccessToken请求参数
      * @return type
      */
-    protected function _params()
+    protected function _params($code = null)
     {
         $params = array(
             'app_id'     => $this->config['app_id'],
@@ -64,7 +64,7 @@ class alipay extends \anerg\OAuth2\OAuth
             'timestamp'  => date("Y-m-d H:i:s"),
             'version'    => '1.0',
             'grant_type' => $this->config['grant_type'],
-            'code'       => $_GET['auth_code'],
+            'code'       => is_null($code) ? $_GET['auth_code'] : $code,
         );
         $params['sign'] = $this->signature($params);
         return $params;
@@ -157,7 +157,7 @@ class alipay extends \anerg\OAuth2\OAuth
     {
         $data = json_decode($result, true);
         $data = $data['alipay_system_oauth_token_response'];
-        if ($data['access_token'] && $data['expires_in'] && $data['user_id']) {
+        if (isset($data['access_token']) && isset($data['expires_in']) && isset($data['user_id'])) {
             $data['openid'] = $data['user_id'];
             return $data;
         } else {

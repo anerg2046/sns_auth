@@ -53,13 +53,13 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
      * 默认的AccessToken请求参数
      * @return type
      */
-    protected function _params()
+    protected function _params($code = null)
     {
         $params = array(
             'appid'      => $this->config['app_id'],
             'secret'     => $this->config['app_secret'],
             'grant_type' => $this->config['grant_type'],
-            'code'       => $_GET['code'],
+            'code'       => is_null($code) ? $_GET['code'] : $code,
         );
         return $params;
     }

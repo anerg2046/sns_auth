@@ -78,7 +78,7 @@ class qq extends \anerg\OAuth2\OAuth
     protected function parseToken($result)
     {
         parse_str($result, $data);
-        if ($data['access_token'] && $data['expires_in']) {
+        if (isset($data['access_token']) && isset($data['expires_in'])) {
             $this->token    = $data;
             $data['openid'] = $this->openid();
             return $data;

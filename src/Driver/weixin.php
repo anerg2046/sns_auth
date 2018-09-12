@@ -71,13 +71,13 @@ class weixin extends \anerg\OAuth2\OAuth
      * 默认的AccessToken请求参数
      * @return type
      */
-    protected function _params()
+    protected function _params($code = null)
     {
         $params = array(
             'appid'      => $this->config['app_id'],
             'secret'     => $this->config['app_secret'],
             'grant_type' => $this->config['grant_type'],
-            'code'       => $_GET['code'],
+            'code'       => is_null($code) ? $_GET['code'] : $code,
         );
         return $params;
     }
@@ -109,7 +109,7 @@ class weixin extends \anerg\OAuth2\OAuth
     protected function parseToken($result)
     {
         $data = json_decode($result, true);
-        if ($data['access_token'] && $data['expires_in'] && $data['openid']) {
+        if (isset($data['access_token']) && isset($data['expires_in']) && isset($data['openid'])) {
             return $data;
         } else {
             exception("获取微信 ACCESS_TOKEN 出错：{$result}");

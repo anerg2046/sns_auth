@@ -51,6 +51,9 @@ abstract class OAuth
 
     private function __construct($config = null)
     {
+        if (!$config) {
+            exception('传入的配置$config不能为空');
+        }
         $class           = get_class($this);
         $cls_arr         = explode('\\', $class);
         $this->channel   = strtoupper(end($cls_arr));
@@ -90,7 +93,9 @@ abstract class OAuth
      */
     protected function initConfig()
     {
-        $this->config['callback'] = $this->config['callback'][$this->display];
+        if (isset($this->config['callback'])) {
+            $this->config['callback'] = $this->config['callback'][$this->display];
+        }
     }
 
     /**
@@ -111,13 +116,13 @@ abstract class OAuth
      * 默认的AccessToken请求参数
      * @return type
      */
-    protected function _params()
+    protected function _params($code = null)
     {
         $params = array(
             'client_id'     => $this->config['app_id'],
             'client_secret' => $this->config['app_secret'],
             'grant_type'    => $this->config['grant_type'],
-            'code'          => $_GET['code'],
+            'code'          => is_null($code) ? $_GET['code'] : $code,
             'redirect_uri'  => $this->config['callback'],
         );
         return $params;
@@ -137,13 +142,13 @@ abstract class OAuth
     /**
      * 获取access_token
      */
-    public function getAccessToken($ignore_stat = false)
+    public function getAccessToken($ignore_stat = false, $code = null)
     {
         if ($ignore_stat === false && (!isset($_COOKIE['A_S']) || $_GET['state'] != $_COOKIE['A_S'])) {
             exception('传递的STATE参数不匹配！');
         } else {
             $this->initConfig();
-            $params      = $this->_params();
+            $params      = $this->_params($code);
             $data        = Http::post($this->AccessTokenURL, $params);
             $this->token = $this->parseToken($data);
             setcookie('A_S', $this->timestamp, $this->timestamp - 600, '/');

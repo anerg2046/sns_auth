@@ -68,7 +68,7 @@ class weibo extends \anerg\OAuth2\OAuth
     protected function parseToken($result)
     {
         $data = json_decode($result, true);
-        if ($data['access_token'] && $data['expires_in'] && $data['remind_in'] && $data['uid']) {
+        if (isset($data['access_token']) && isset($data['expires_in']) && isset($data['remind_in']) && isset($data['uid'])) {
             $data['openid'] = $data['uid'];
             unset($data['uid']);
             return $data;
