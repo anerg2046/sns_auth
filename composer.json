@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "anerg2046/helper": "^1.0"
+        "anerg2046/helper": "^1.0",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "autoload": {
         "psr-4": {

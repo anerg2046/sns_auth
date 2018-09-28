@@ -8,8 +8,6 @@
 
 namespace anerg\OAuth2;
 
-use anerg\helper\Http;
-
 abstract class OAuth
 {
 
@@ -149,7 +147,9 @@ abstract class OAuth
         } else {
             $this->initConfig();
             $params      = $this->_params($code);
-            $data        = Http::post($this->AccessTokenURL, $params);
+            $client      = \GuzzleHttp\Client();
+            $response    = $client->request('POST', $this->AccessTokenURL, ['proxy' => 'tcp://localhost:1080', 'form_params' => $params]);
+            $data        = $response->getBody()->getContents();
             $this->token = $this->parseToken($data);
             setcookie('A_S', $this->timestamp, $this->timestamp - 600, '/');
             return $this->token;
