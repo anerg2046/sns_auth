@@ -39,13 +39,13 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
         setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
         $this->initConfig();
         //Oauth 标准参数
-        $params = array(
+        $params = [
             'appid'         => $this->config['app_id'],
             'redirect_uri'  => $this->config['callback'],
             'response_type' => $this->config['response_type'],
             'scope'         => $this->config['scope'],
             'state'         => $this->timestamp,
-        );
+        ];
         return $this->AuthorizeURL . '?' . http_build_query($params) . '#wechat_redirect';
     }
 
@@ -55,12 +55,12 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
      */
     protected function _params($code = null)
     {
-        $params = array(
+        $params = [
             'appid'      => $this->config['app_id'],
             'secret'     => $this->config['app_secret'],
             'grant_type' => $this->config['grant_type'],
-            'code'       => is_null($code) ? $_GET['code'] : $code,
-        );
+            'code'       => $code ?: $_GET['code'],
+        ];
         return $params;
     }
 
@@ -74,13 +74,16 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
     public function call($api, $param = '', $method = 'GET')
     {
         /* 微信调用公共参数 */
-        $params = array(
+        $params = [
             'access_token' => $this->token['access_token'],
             'openid'       => $this->openid(),
             'lang'         => 'zh_CN',
-        );
+        ];
 
-        $data = Http::request($this->url($api), $params, $method);
+        $client   = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $this->url($api), ['form_params' => $this->param($params, $param)]);
+        $data     = $response->getBody()->getContents();
+
         return json_decode($data, true);
     }
 
@@ -91,10 +94,10 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
     protected function parseToken($result)
     {
         $data = json_decode($result, true);
-        if ($data['access_token'] && $data['expires_in'] && $data['openid']) {
+        if (isset($data['access_token']) && isset($data['expires_in']) && isset($data['openid'])) {
             return $data;
         } else {
-            exception("获取微信 ACCESS_TOKEN 出错：{$result}");
+            throw new \Exception("获取微信 ACCESS_TOKEN 出错：{$result}");
         }
     }
 
@@ -108,7 +111,7 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
         if (isset($data['openid'])) {
             return $data['openid'];
         } else {
-            exception('没有获取到微信用户ID！');
+            throw new \Exception('没有获取到微信用户ID！');
         }
 
     }
@@ -120,25 +123,25 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
     {
         $rsp = $this->call('userinfo');
         if (!$rsp || (isset($rsp['errcode']) && $rsp['errcode'] != 0)) {
-            exception('接口访问失败！' . $rsp['errmsg']);
+            throw new \Exception('接口访问失败！' . $rsp['errmsg']);
         } else {
-            $userinfo = array(
+            $userinfo = [
                 'openid'  => $this->token['openid'],
                 'unionid' => isset($this->token['unionid']) ? $this->token['unionid'] : '',
                 'channel' => 'weixin_qrcode',
                 'nick'    => $rsp['nickname'],
                 'gender'  => $this->getGender($rsp['sex']),
                 'avatar'  => $rsp['headimgurl'],
-            );
+            ];
             return $userinfo;
         }
     }
 
-    public function userinfo_all()
+    public function userinfoRaw()
     {
         $rsp = $this->call('userinfo');
         if (!$rsp || (isset($rsp['errcode']) && $rsp['errcode'] != 0)) {
-            exception('接口访问失败！' . $rsp['errmsg']);
+            throw new \Exception('接口访问失败！' . $rsp['errmsg']);
         } else {
             return $rsp;
         }

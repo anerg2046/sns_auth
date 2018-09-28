@@ -50,12 +50,12 @@ abstract class OAuth
     private function __construct($config = null)
     {
         if (!$config) {
-            exception('传入的配置$config不能为空');
+            throw new \Exception('传入的配置$config不能为空');
         }
         $class           = get_class($this);
         $cls_arr         = explode('\\', $class);
         $this->channel   = strtoupper(end($cls_arr));
-        $_config         = array('response_type' => 'code', 'grant_type' => 'authorization_code');
+        $_config         = ['response_type' => 'code', 'grant_type' => 'authorization_code'];
         $this->config    = array_merge($config, $_config);
         $this->timestamp = time();
     }
@@ -66,7 +66,7 @@ abstract class OAuth
      */
     public function setDisplay($display)
     {
-        if (in_array($display, array('default', 'mobile'))) {
+        if (in_array($display, ['default', 'mobile'])) {
             $this->display = $display;
         }
     }
@@ -76,7 +76,7 @@ abstract class OAuth
      */
     public static function getInstance($config, $type = '')
     {
-        static $_instance = array();
+        static $_instance = [];
 
         $type = strtolower($type);
         if (!isset($_instance[$type])) {
@@ -116,13 +116,13 @@ abstract class OAuth
      */
     protected function _params($code = null)
     {
-        $params = array(
+        $params = [
             'client_id'     => $this->config['app_id'],
             'client_secret' => $this->config['app_secret'],
             'grant_type'    => $this->config['grant_type'],
-            'code'          => is_null($code) ? $_GET['code'] : $code,
+            'code'          => $code ?: $_GET['code'],
             'redirect_uri'  => $this->config['callback'],
-        );
+        ];
         return $params;
     }
 
@@ -143,12 +143,12 @@ abstract class OAuth
     public function getAccessToken($ignore_stat = false, $code = null)
     {
         if ($ignore_stat === false && (!isset($_COOKIE['A_S']) || $_GET['state'] != $_COOKIE['A_S'])) {
-            exception('传递的STATE参数不匹配！');
+            throw new \Exception('传递的STATE参数不匹配！');
         } else {
             $this->initConfig();
             $params      = $this->_params($code);
-            $client      = \GuzzleHttp\Client();
-            $response    = $client->request('POST', $this->AccessTokenURL, ['proxy' => 'tcp://localhost:1080', 'form_params' => $params]);
+            $client      = new \GuzzleHttp\Client();
+            $response    = $client->request('POST', $this->AccessTokenURL, ['form_params' => $params]);
             $data        = $response->getBody()->getContents();
             $this->token = $this->parseToken($data);
             setcookie('A_S', $this->timestamp, $this->timestamp - 600, '/');
@@ -179,4 +179,16 @@ abstract class OAuth
      * 获取当前授权用户的SNS标识
      */
     abstract public function openid();
+
+    /**
+     * 抽象方法
+     * 获取格式化后的用户信息
+     */
+    abstract public function userinfo();
+
+    /**
+     * 抽象方法
+     * 获取原始接口返回的用户信息
+     */
+    abstract public function userinfoRaw();
 }

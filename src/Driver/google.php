@@ -30,30 +30,14 @@ class google extends \anerg\OAuth2\OAuth
         setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
         $this->initConfig();
         //Oauth 标准参数
-        $params = array(
+        $params = [
             'client_id'     => $this->config['app_id'],
             'redirect_uri'  => $this->config['callback'],
             'response_type' => $this->config['response_type'],
             'scope'         => $this->config['scope'],
             'state'         => $this->timestamp,
-        );
+        ];
         return $this->AuthorizeURL . '?' . http_build_query($params);
-    }
-
-    /**
-     * 默认的AccessToken请求参数
-     * @return type
-     */
-    protected function _params($code = null)
-    {
-        $params = array(
-            'client_id'     => $this->config['app_id'],
-            'client_secret' => $this->config['app_secret'],
-            'grant_type'    => $this->config['grant_type'],
-            'redirect_uri'  => $this->config['callback'],
-            'code'          => is_null($code) ? $_GET['code'] : $code,
-        );
-        return $params;
     }
 
     /**
@@ -66,7 +50,7 @@ class google extends \anerg\OAuth2\OAuth
         if (isset($data['access_token']) && isset($data['expires_in'])) {
             return $data;
         } else {
-            exception("获取谷歌 ACCESS_TOKEN 出错：{$result}");
+            throw new \Exception("获取谷歌 ACCESS_TOKEN 出错：{$result}");
         }
     }
 
@@ -74,42 +58,86 @@ class google extends \anerg\OAuth2\OAuth
      * 组装接口调用参数 并调用接口
      * @param  string $api    微博API
      * @param  string $param  调用API的额外参数
-     * @param  string $method HTTP请求方法 默认为GET
      * @return json
      */
-    public function call($api, $param = '', $method = 'GET')
+    public function call($api, $param = '')
     {
-        /* 谷歌调用公共参数 */
-        $params = [
-            'access_token' => $this->token['access_token'],
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->token['access_token'],
         ];
 
-        $data = Http::request($this->url($api), $this->param($params, $param), $method);
-        print_r(json_decode($data, true));
+        $client   = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $this->url($api), ['headers' => $headers]);
+        $data     = $response->getBody()->getContents();
+
         return json_decode($data, true);
     }
 
     /**
      * 获取授权用户的用户信息
+     *
+     * @return array
      */
     public function userinfo()
     {
-        $rsp = $this->call('profile');
-        if (!$rsp || (isset($rsp['errcode']) && $rsp['errcode'] != 0)) {
-            exception('接口访问失败！' . $rsp['errmsg']);
+        $rsp = $this->call('oauth2/v2/userinfo');
+        if (!$rsp || !isset($rsp['id'])) {
+            throw new \Exception('接口访问失败！' . json_encode($rsp));
         } else {
-            $userinfo = array(
-                'openid'  => $this->token['openid'],
-                'unionid' => isset($this->token['unionid']) ? $this->token['unionid'] : '',
-                'channel' => 'weixin',
-                'nick'    => $rsp['nickname'],
-                'gender'  => $this->getGender($rsp['sex']),
-                'avatar'  => $rsp['headimgurl'],
-            );
+            $userinfo = [
+                'openid'  => $rsp['id'],
+                'channel' => 'google',
+                'nick'    => $rsp['name'],
+                'gender'  => $this->getGender($rsp['gender']),
+                'avatar'  => $rsp['picture'],
+            ];
             return $userinfo;
         }
     }
 
+    /**
+     * 获取原始用户信息
+     *
+     * @return array
+     */
+    public function userinfoRaw()
+    {
+        $rsp = $this->call('oauth2/v2/userinfo');
+        if (!$rsp || !isset($rsp['id'])) {
+            throw new \Exception('接口访问失败！' . json_encode($rsp));
+        } else {
+            return $rsp;
+        }
+    }
+
+    /**
+     * 获取用户的openid
+     *
+     * @return string
+     */
     public function openid()
-    {}
+    {
+        $userinfo = $this->userinfo();
+        return $userinfo['openid'];
+    }
+
+    /**
+     * 格式化性别
+     *
+     * @param string $gender
+     * @return string
+     */
+    private function getGender($gender)
+    {
+        $return = 'n';
+        switch ($gender) {
+            case 'male':
+                $return = 'm';
+                break;
+            case 'female':
+                $return = 'f';
+                break;
+        }
+        return $return;
+    }
 }

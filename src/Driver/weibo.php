@@ -8,8 +8,6 @@
 
 namespace anerg\OAuth2\Driver;
 
-use anerg\helper\Http;
-
 class weibo extends \anerg\OAuth2\OAuth
 {
 
@@ -36,13 +34,13 @@ class weibo extends \anerg\OAuth2\OAuth
         setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
         $this->initConfig();
         //Oauth 标准参数
-        $params = array(
+        $params = [
             'client_id'    => $this->config['app_id'],
             'redirect_uri' => $this->config['callback'],
             'state'        => $this->timestamp,
             'scope'        => $this->config['scope'],
             'display'      => $this->display,
-        );
+        ];
         return $this->AuthorizeURL . '?' . http_build_query($params);
     }
 
@@ -54,14 +52,17 @@ class weibo extends \anerg\OAuth2\OAuth
         }
     }
 
-    public function call($api, $param = '', $method = 'GET')
+    public function call($api, $param = '')
     {
         /* 腾讯QQ调用公共参数 */
-        $params = array(
+        $params = [
             'access_token' => $this->token['access_token'],
-        );
+        ];
 
-        $data = Http::request($this->url($api, '.json'), $this->param($params, $param), $method);
+        $client   = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $this->url($api, '.json'), ['form_params' => $this->param($params, $param)]);
+        $data     = $response->getBody()->getContents();
+
         return json_decode($data, true);
     }
 
@@ -73,7 +74,7 @@ class weibo extends \anerg\OAuth2\OAuth
             unset($data['uid']);
             return $data;
         } else {
-            exception("获取新浪微博ACCESS_TOKEN出错：{$data['error']}");
+            throw new \Exception("获取新浪微博ACCESS_TOKEN出错：{$data['error']}");
         }
     }
 
@@ -87,7 +88,7 @@ class weibo extends \anerg\OAuth2\OAuth
         if (isset($data['openid'])) {
             return $data['openid'];
         } else {
-            exception('没有获取到新浪微博用户ID！');
+            throw new \Exception('没有获取到新浪微博用户ID！');
         }
 
     }
@@ -99,16 +100,26 @@ class weibo extends \anerg\OAuth2\OAuth
     {
         $rsp = $this->call('users/show', 'uid=' . $this->openid());
         if (isset($rsp['error_code'])) {
-            exception('接口访问失败！' . $rsp['error']);
+            throw new \Exception('接口访问失败！' . $rsp['error']);
         } else {
-            $userinfo = array(
+            $userinfo = [
                 'openid'  => $this->openid(),
                 'channel' => 'weibo',
                 'nick'    => $rsp['screen_name'],
                 'gender'  => $rsp['gender'],
                 'avatar'  => $rsp['avatar_hd'],
-            );
+            ];
             return $userinfo;
+        }
+    }
+
+    public function userinfoRaw()
+    {
+        $rsp = $this->call('users/show', 'uid=' . $this->openid());
+        if (isset($rsp['error_code'])) {
+            throw new \Exception('接口访问失败！' . $rsp['error']);
+        } else {
+            return $rsp;
         }
     }
 

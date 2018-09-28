@@ -8,8 +8,6 @@
 
 namespace anerg\OAuth2\Driver;
 
-use anerg\helper\Http;
-
 class alipay extends \anerg\OAuth2\OAuth
 {
     const RSA_PRIVATE = 1;
@@ -41,12 +39,12 @@ class alipay extends \anerg\OAuth2\OAuth
         setcookie('A_S', $this->timestamp, $this->timestamp + 600, '/');
         $this->initConfig();
         //Oauth 标准参数
-        $params = array(
+        $params = [
             'app_id'       => $this->config['app_id'],
             'redirect_uri' => $this->config['callback'],
             'scope'        => $this->config['scope'],
             'state'        => $this->timestamp,
-        );
+        ];
         return $this->AuthorizeURL . '?' . http_build_query($params);
     }
 
@@ -56,7 +54,7 @@ class alipay extends \anerg\OAuth2\OAuth
      */
     protected function _params($code = null)
     {
-        $params = array(
+        $params = [
             'app_id'     => $this->config['app_id'],
             'method'     => 'alipay.system.oauth.token',
             'charset'    => 'UTF-8',
@@ -65,7 +63,7 @@ class alipay extends \anerg\OAuth2\OAuth
             'version'    => '1.0',
             'grant_type' => $this->config['grant_type'],
             'code'       => is_null($code) ? $_GET['auth_code'] : $code,
-        );
+        ];
         $params['sign'] = $this->signature($params);
         return $params;
     }
@@ -86,6 +84,13 @@ class alipay extends \anerg\OAuth2\OAuth
         return base64_encode($sign);
     }
 
+    /**
+     * 构建支付宝参数
+     *
+     * @param [type] $params
+     * @param boolean $urlencode
+     * @return void
+     */
     public function buildParams($params, $urlencode = false)
     {
         $params    = array_filter($params);
@@ -101,6 +106,12 @@ class alipay extends \anerg\OAuth2\OAuth
         return rtrim($param_str, '&');
     }
 
+    /**
+     * 获取密钥
+     *
+     * @param [type] $type
+     * @return string
+     */
     protected function getRsaKeyVal($type = self::RSA_PUBLIC)
     {
         if ($type === self::RSA_PUBLIC) {
@@ -128,12 +139,11 @@ class alipay extends \anerg\OAuth2\OAuth
      * 组装接口调用参数 并调用接口
      * @param  string $api    支付宝API方法
      * @param  string $param  调用API的额外参数
-     * @param  string $method HTTP请求方法 默认为GET
      * @return json
      */
-    public function call($api, $param = '', $method = 'POST')
+    public function call($api, $param = '')
     {
-        $params = array(
+        $params = [
             'app_id'     => $this->config['app_id'],
             'method'     => $api,
             'charset'    => 'UTF-8',
@@ -141,10 +151,13 @@ class alipay extends \anerg\OAuth2\OAuth
             'timestamp'  => date("Y-m-d H:i:s"),
             'version'    => '1.0',
             'auth_token' => $this->token['access_token'],
-        );
+        ];
         $params['sign'] = $this->signature($params);
 
-        $data = Http::request($this->ApiBase, $params, $method);
+        $client   = new \GuzzleHttp\Client();
+        $response = $client->request('POST', $this->ApiBase, ['form_params' => $this->param($params, $param)]);
+        $data     = $response->getBody()->getContents();
+
         $data = mb_convert_encoding($data, 'utf-8', 'gbk');
         return json_decode($data, true);
     }
@@ -190,18 +203,23 @@ class alipay extends \anerg\OAuth2\OAuth
         if (!$rsp || (isset($rsp['code']) && $rsp['code'] != 10000)) {
             throw new \Exception('接口访问失败！' . $rsp['msg']);
         } else {
-            $userinfo = array(
+            $userinfo = [
                 'openid'  => $this->token['openid'],
                 'channel' => 'alipay',
                 'nick'    => $rsp['nick_name'],
                 'gender'  => strtolower($rsp['gender']),
                 'avatar'  => $rsp['avatar'],
-            );
+            ];
             return $userinfo;
         }
     }
 
-    public function userinfo_all()
+    /**
+     * 获取原始用户信息
+     *
+     * @return void
+     */
+    public function userinfoRaw()
     {
         $rsp = $this->call('alipay.user.info.share');
         $rsp = $rsp['alipay_user_info_share_response'];
