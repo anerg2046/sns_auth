@@ -113,7 +113,6 @@ class wx_qrcode extends \anerg\OAuth2\OAuth
         } else {
             throw new \Exception('没有获取到微信用户ID！');
         }
-
     }
 
     /**

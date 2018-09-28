@@ -190,7 +190,6 @@ class alipay extends \anerg\OAuth2\OAuth
         } else {
             throw new \Exception('没有获取到支付宝用户ID！');
         }
-
     }
 
     /**
