@@ -17,6 +17,12 @@ class google extends \anerg\OAuth2\OAuth
     protected $AccessTokenURL = 'https://www.googleapis.com/oauth2/v4/token';
 
     /**
+     * API根路径
+     * @var string
+     */
+    protected $ApiBase = 'https://www.googleapis.com/';
+
+    /**
      * 请求Authorize访问地址
      */
     public function getAuthorizeURL()
