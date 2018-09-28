@@ -103,4 +103,7 @@ class google extends \anerg\OAuth2\OAuth
             return $userinfo;
         }
     }
+
+    public function openid()
+    {}
 }
