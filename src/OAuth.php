@@ -166,7 +166,7 @@ abstract class OAuth
      * 抽象方法
      * 组装接口调用参数 并调用接口
      */
-    abstract protected function call($api, $param = '', $method = 'GET');
+    abstract protected function call($api, $param = '');
 
     /**
      * 抽象方法
