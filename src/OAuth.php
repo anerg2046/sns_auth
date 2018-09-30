@@ -17,7 +17,7 @@ abstract class OAuth
     protected static function init($gateway, $config = null)
     {
         $gateway = Str::uFirst($gateway);
-        $class   = __NAMESPACE__ . '\\Gateways\\' . $gateway . '\\' . $gateway . 'OAuth';
+        $class   = __NAMESPACE__ . '\\Gateways\\' . $gateway;
         if (class_exists($class)) {
             $app = new $class($config);
             if ($app instanceof GatewayInterface) {

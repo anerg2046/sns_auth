@@ -1,11 +1,11 @@
 <?php
 
-namespace anerg\OAuth2\Gateways\Twitter;
+namespace anerg\OAuth2\Gateways;
 
 use anerg\OAuth2\Connector\Gateway;
 use anerg\OAuth2\Helper\Str;
 
-class TwitterOAuth extends Gateway
+class Twitter extends Gateway
 {
     const API_BASE = 'https://api.twitter.com/';
 
@@ -24,19 +24,45 @@ class TwitterOAuth extends Gateway
      * 获取当前授权用户的openid标识
      */
     public function openid()
-    {}
+    {
+        $data = $this->userinfoRaw();
+        return $data['id_str'];
+    }
 
     /**
      * 获取格式化后的用户信息
      */
     public function userinfo()
-    {}
+    {
+        $data = $this->userinfoRaw();
+
+        $return = [
+            'openid'  => $data['id_str'],
+            'channel' => 'twitter',
+            'nick'    => $data['name'],
+            'gender'  => 'n', //twitter不返回用户性别
+            'avatar'  => $data['profile_image_url_https'],
+        ];
+        return $return;
+    }
 
     /**
      * 获取原始接口返回的用户信息
      */
     public function userinfoRaw()
-    {}
+    {
+        if (!$this->token) {
+            $this->token = $this->getAccessToken();
+            if (isset($this->token['oauth_token_secret'])) {
+                $this->tokenSecret = $this->token['oauth_token_secret'];
+            } else {
+                throw new \Exception("获取Twitter ACCESS_TOKEN 出错：" . json_encode($this->token));
+            }
+
+        }
+
+        return $this->call('1.1/account/verify_credentials.json', $this->token, 'GET', true);
+    }
 
     /**
      * 发起请求
@@ -46,10 +72,11 @@ class TwitterOAuth extends Gateway
      * @param string $method
      * @return array
      */
-    protected function call($api, $params = [], $method = 'GET')
+    private function call($api, $params = [], $method = 'GET', $isJson = false)
     {
+        $method  = strtoupper($method);
         $request = [
-            'method' => strtoupper($method),
+            'method' => $method,
             'uri'    => self::API_BASE . $api,
         ];
         $oauthParams                    = $this->getOAuthParams($params);
@@ -57,10 +84,15 @@ class TwitterOAuth extends Gateway
 
         $headers = ['Authorization' => $this->getAuthorizationHeader($oauthParams)];
 
-        return $this->$method($request['uri'], $params, $headers);
+        $data = $this->$method($request['uri'], $params, $headers);
+        if ($isJson) {
+            return json_decode($data, true);
+        }
+        parse_str($data, $data);
+        return $data;
     }
 
-    protected function getOAuthParams($params = [])
+    private function getOAuthParams($params = [])
     {
         $_default = [
             'oauth_consumer_key'     => $this->config['app_id'],
@@ -73,9 +105,8 @@ class TwitterOAuth extends Gateway
         return array_merge($_default, $params);
     }
 
-    protected function signature($request, $params = [])
+    private function signature($request, $params = [])
     {
-
         ksort($params);
         $sign_str = Str::buildParams($params, true);
         $sign_str = $request['method'] . '&' . rawurlencode($request['uri']) . '&' . rawurlencode($sign_str);
@@ -84,12 +115,23 @@ class TwitterOAuth extends Gateway
         return rawurlencode(base64_encode(hash_hmac('sha1', $sign_str, $sign_key, true)));
     }
 
-    protected function getAuthorizationHeader($params)
+    private function getAuthorizationHeader($params)
     {
         $return = 'OAuth ';
         foreach ($params as $k => $param) {
             $return .= $k . '="' . $param . '", ';
         }
         return rtrim($return, ', ');
+    }
+
+    /**
+     * 获取access token
+     * twitter不是标准的oauth2
+     *
+     * @return void
+     */
+    protected function getAccessToken()
+    {
+        return $this->call('oauth/access_token', $_GET, 'POST');
     }
 }

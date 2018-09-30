@@ -26,6 +26,18 @@ abstract class Gateway implements GatewayInterface
      */
     protected $display = 'default';
 
+    /**
+     * 第三方Token信息
+     * @var array
+     */
+    protected $token = null;
+
+    /**
+     * 是否验证回跳地址中的state参数
+     * @var boolean
+     */
+    protected $checkState = false;
+
     public function __construct($config = null)
     {
         if (!$config) {
@@ -39,6 +51,7 @@ abstract class Gateway implements GatewayInterface
             'response_type' => 'code',
             'grant_type'    => 'authorization_code',
             'proxy'         => '',
+            'state'         => '',
         ];
         $this->config    = array_merge($_config, $config);
         $this->timestamp = time();
@@ -56,10 +69,60 @@ abstract class Gateway implements GatewayInterface
         return $this;
     }
 
-    public function GET($url, $params, $headers)
+    /**
+     * 强制验证回跳地址中的state参数
+     *
+     * @return void
+     */
+    public function mustCheckState()
+    {
+        $this->checkState = true;
+        return $this;
+    }
+
+    protected function GET($url, $params = [], $headers = [])
     {
         $client   = new \GuzzleHttp\Client();
-        $response = $client->request('GET', $url, ['proxy' => $this->config['proxy'], 'headers' => $headers, 'query' => $param]);
+        $response = $client->request('GET', $url, ['proxy' => $this->config['proxy'], 'headers' => $headers, 'query' => $params]);
         return $response->getBody()->getContents();
+    }
+
+    protected function POST($url, $params = [], $headers = [])
+    {
+        $client   = new \GuzzleHttp\Client();
+        $response = $client->request('POST', $url, ['proxy' => $this->config['proxy'], 'headers' => $headers, 'form_params' => $params, 'http_errors' => false]);
+        return $response->getBody()->getContents();
+    }
+
+    /**
+     * 默认的AccessToken请求参数
+     * @return type
+     */
+    protected function accessTokenParams()
+    {
+        $params = [
+            'client_id'     => $this->config['app_id'],
+            'client_secret' => $this->config['app_secret'],
+            'grant_type'    => $this->config['grant_type'],
+            'code'          => isset($_GET['code']) ? $_GET['code'] : '',
+            'redirect_uri'  => $this->config['callback'],
+        ];
+        return $params;
+    }
+
+    /**
+     * 获取AccessToken
+     *
+     * @return void
+     */
+    protected function getAccessToken()
+    {
+        if ($this->checkState == true) {
+            if (!isset($_GET['state']) || $_GET['state'] != $this->config['state']) {
+                throw new \Exception('传递的STATE参数不匹配！');
+            }
+        }
+        $params = $this->accessTokenParams();
+        return $this->POST($this->AccessTokenURL, $params);
     }
 }

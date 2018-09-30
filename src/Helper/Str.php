@@ -8,12 +8,11 @@ class Str
         return ucfirst(strtolower($str));
     }
 
-    public static function buildParams($params, $urlencode = false)
+    public static function buildParams($params, $urlencode = false, $except = ['sign'])
     {
-        $params    = array_filter($params);
         $param_str = '';
         foreach ($params as $k => $v) {
-            if ($k == 'sign') {
+            if (in_array($k, $except)) {
                 continue;
             }
             $param_str .= $k . '=';
