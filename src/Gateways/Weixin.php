@@ -26,6 +26,21 @@ class Weixin extends Gateway
     }
 
     /**
+     * 获取中转代理地址
+     */
+    public function getProxyURL($proxy_url)
+    {
+        $params = [
+            'appid'         => $this->config['app_id'],
+            'response_type' => $this->config['response_type'],
+            'scope'         => $this->config['scope'],
+            'state'         => $this->config['state'],
+            'return_uri'    => $this->config['callback'],
+        ];
+        return $proxy_url . '?' . http_build_query($params);
+    }
+
+    /**
      * 获取当前授权用户的openid标识
      */
     public function openid()
