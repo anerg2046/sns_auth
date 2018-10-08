@@ -125,4 +125,17 @@ abstract class Gateway implements GatewayInterface
         $params = $this->accessTokenParams();
         return $this->POST($this->AccessTokenURL, $params);
     }
+
+    /**
+     * 获取token信息
+     *
+     * @return void
+     */
+    protected function getToken()
+    {
+        if (!$this->token) {
+            $token       = $this->getAccessToken();
+            $this->token = $this->parseToken($token);
+        }
+    }
 }
