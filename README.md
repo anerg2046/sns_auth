@@ -1,5 +1,11 @@
 # 通用第三方登录说明文档
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/anerg2046/sns_auth/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/anerg2046/sns_auth/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/anerg2046/sns_auth/badges/build.png?b=master)](https://scrutinizer-ci.com/g/anerg2046/sns_auth/build-status/master)
+[![Latest Stable Version](https://poser.pugx.org/anerg2046/sns_auth/v/stable)](https://packagist.org/packages/anerg2046/sns_auth)
+[![Total Downloads](https://poser.pugx.org/anerg2046/sns_auth/downloads)](https://packagist.org/packages/anerg2046/sns_auth)
+[![License](https://poser.pugx.org/anerg2046/sns_auth/license)](https://packagist.org/packages/anerg2046/sns_auth)
+[![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
 2.0版本全新发布，目前支持的登录平台包括：
 
 * 微信
