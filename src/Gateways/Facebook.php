@@ -58,7 +58,7 @@ class Facebook extends Gateway
     public function userinfoRaw()
     {
         $this->getToken();
-        $fields = isset($this->config['fields']) ? $this->config['fields'] : 'id,name,gender,picture.width(400).redirect(false)';
+        $fields = isset($this->config['fields']) ? $this->config['fields'] : 'id,name,gender,picture.width(400)';
         return $this->call('me', ['access_token' => $this->token['access_token'], 'fields' => $fields], 'GET');
     }
 
