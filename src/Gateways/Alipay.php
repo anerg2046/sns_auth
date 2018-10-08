@@ -32,11 +32,7 @@ class Alipay extends Gateway
      */
     public function openid()
     {
-
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         if (isset($this->token['openid'])) {
             return $this->token['openid'];
@@ -67,10 +63,7 @@ class Alipay extends Gateway
      */
     public function userinfoRaw()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         $rsp = $this->call('alipay.user.info.share');
         return $rsp['alipay_user_info_share_response'];
@@ -172,19 +165,19 @@ class Alipay extends Gateway
 
     /**
      * 解析access_token方法请求后的返回值
-     * @param string $result 获取access_token的方法的返回值
+     * @param string $token 获取access_token的方法的返回值
      */
-    private function parseToken($result)
+    protected function parseToken($token)
     {
-        $result = mb_convert_encoding($result, 'utf-8', 'gbk');
-        $data   = json_decode($result, true);
+        $token = mb_convert_encoding($token, 'utf-8', 'gbk');
+        $data  = json_decode($token, true);
 
         if (isset($data['alipay_system_oauth_token_response'])) {
             $data           = $data['alipay_system_oauth_token_response'];
             $data['openid'] = $data['user_id'];
             return $data;
         } else {
-            throw new \Exception("获取支付宝 ACCESS_TOKEN 出错：{$result}");
+            throw new \Exception("获取支付宝 ACCESS_TOKEN 出错：{$token}");
         }
     }
 }

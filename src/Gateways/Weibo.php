@@ -32,10 +32,7 @@ class Weibo extends Gateway
      */
     public function openid()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         if (isset($this->token['openid'])) {
             return $this->token['openid'];
@@ -66,10 +63,7 @@ class Weibo extends Gateway
      */
     public function userinfoRaw()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         return $this->call('users/show.json', ['uid' => $this->openid()]);
     }
@@ -106,7 +100,7 @@ class Weibo extends Gateway
 
     /**
      * 解析access_token方法请求后的返回值
-     * @param string $result 获取access_token的方法的返回值
+     * @param string $token 获取access_token的方法的返回值
      */
     protected function parseToken($token)
     {

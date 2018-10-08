@@ -55,10 +55,7 @@ class Google extends Gateway
      */
     public function userinfoRaw()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         return $this->call('oauth2/v2/userinfo');
     }
@@ -84,7 +81,7 @@ class Google extends Gateway
      * 解析access_token方法请求后的返回值
      * @param string $result 获取access_token的方法的返回值
      */
-    private function parseToken($token)
+    protected function parseToken($token)
     {
         $data = json_decode($token, true);
         if (isset($data['access_token'])) {

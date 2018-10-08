@@ -26,14 +26,26 @@ class Weixin extends Gateway
     }
 
     /**
+     * 获取中转代理地址
+     */
+    public function getProxyURL()
+    {
+        $params = [
+            'appid'         => $this->config['app_id'],
+            'response_type' => $this->config['response_type'],
+            'scope'         => $this->config['scope'],
+            'state'         => $this->config['state'],
+            'return_uri'    => $this->config['callback'],
+        ];
+        return $this->config['proxy_url'] . '?' . http_build_query($params);
+    }
+
+    /**
      * 获取当前授权用户的openid标识
      */
     public function openid()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         if (isset($this->token['openid'])) {
             return $this->token['openid'];
@@ -65,10 +77,7 @@ class Weixin extends Gateway
      */
     public function userinfoRaw()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         return $this->call('userinfo');
     }
@@ -126,15 +135,15 @@ class Weixin extends Gateway
 
     /**
      * 解析access_token方法请求后的返回值
-     * @param string $result 获取access_token的方法的返回值
+     * @param string $token 获取access_token的方法的返回值
      */
-    private function parseToken($result)
+    protected function parseToken($token)
     {
-        $data = json_decode($result, true);
+        $data = json_decode($token, true);
         if (isset($data['access_token'])) {
             return $data;
         } else {
-            throw new \Exception("获取微信 ACCESS_TOKEN 出错：{$result}");
+            throw new \Exception("获取微信 ACCESS_TOKEN 出错：{$token}");
         }
     }
 

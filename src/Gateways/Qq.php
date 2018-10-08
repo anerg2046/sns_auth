@@ -31,10 +31,7 @@ class Qq extends Gateway
      */
     public function openid()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
-            $this->token = $this->parseToken($token);
-        }
+        $this->getToken();
 
         if (!isset($this->token['openid']) || !$this->token['openid']) {
             $this->token['openid'] = $this->getOpenID();
@@ -92,15 +89,15 @@ class Qq extends Gateway
 
     /**
      * 解析access_token方法请求后的返回值
-     * @param string $result 获取access_token的方法的返回值
+     * @param string $token 获取access_token的方法的返回值
      */
-    protected function parseToken($result)
+    protected function parseToken($token)
     {
-        parse_str($result, $data);
+        parse_str($token, $data);
         if (isset($data['access_token'])) {
             return $data;
         } else {
-            throw new \Exception("获取腾讯QQ ACCESS_TOKEN 出错：" . $result);
+            throw new \Exception("获取腾讯QQ ACCESS_TOKEN 出错：" . $token);
         }
     }
 
