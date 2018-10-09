@@ -60,7 +60,6 @@ class Line extends Gateway
         $this->getToken();
 
         $data = $this->call('profile', $this->token, 'GET');
-        $data = json_decode($data, true);
 
         if (isset($data['error'])) {
             throw new \Exception($data['error_description']);
@@ -88,7 +87,7 @@ class Line extends Gateway
 
         $data = $this->$method($request['uri'], $params, $headers);
 
-        return $data;
+        return json_decode($data, true);
     }
 
     /**
