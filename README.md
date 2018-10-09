@@ -1,5 +1,9 @@
 # 通用第三方登录说明文档
 
+
+[![GitHub stars](https://img.shields.io/github/stars/anerg2046/sns_auth.svg)](https://github.com/anerg2046/sns_auth/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/anerg2046/sns_auth.svg)](https://github.com/anerg2046/sns_auth/network)
+[![GitHub issues](https://img.shields.io/github/issues/anerg2046/sns_auth.svg)](https://github.com/anerg2046/sns_auth/issues)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/anerg2046/sns_auth/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/anerg2046/sns_auth/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/anerg2046/sns_auth/badges/build.png?b=master)](https://scrutinizer-ci.com/g/anerg2046/sns_auth/build-status/master)
 [![Latest Stable Version](https://poser.pugx.org/anerg2046/sns_auth/v/stable)](https://packagist.org/packages/anerg2046/sns_auth)
