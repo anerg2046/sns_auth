@@ -104,7 +104,7 @@ class Qq extends Gateway
     /**
      * 通过接口获取openid
      *
-     * @return void
+     * @return string
      */
     private function getOpenID()
     {

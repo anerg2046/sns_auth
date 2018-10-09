@@ -59,7 +59,7 @@ class Line extends Gateway
     {
         $this->getToken();
 
-        $data = $this->call('profile', $this->token, 'GET', true);
+        $data = $this->call('profile', $this->token, 'GET');
         $data = json_decode($data, true);
 
         if (isset($data['error'])) {

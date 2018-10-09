@@ -72,7 +72,7 @@ abstract class Gateway implements GatewayInterface
     /**
      * 强制验证回跳地址中的state参数
      *
-     * @return void
+     * @return self
      */
     public function mustCheckState()
     {
@@ -80,6 +80,14 @@ abstract class Gateway implements GatewayInterface
         return $this;
     }
 
+    /**
+     * 执行GET请求操作
+     *
+     * @param string $url
+     * @param array $params
+     * @param array $headers
+     * @return string
+     */
     protected function GET($url, $params = [], $headers = [])
     {
         $client   = new \GuzzleHttp\Client();
@@ -87,6 +95,14 @@ abstract class Gateway implements GatewayInterface
         return $response->getBody()->getContents();
     }
 
+    /**
+     * 执行POST请求操作
+     *
+     * @param string $url
+     * @param array $params
+     * @param array $headers
+     * @return string
+     */
     protected function POST($url, $params = [], $headers = [])
     {
         $client   = new \GuzzleHttp\Client();
@@ -96,7 +112,7 @@ abstract class Gateway implements GatewayInterface
 
     /**
      * 默认的AccessToken请求参数
-     * @return type
+     * @return array
      */
     protected function accessTokenParams()
     {
@@ -113,11 +129,11 @@ abstract class Gateway implements GatewayInterface
     /**
      * 获取AccessToken
      *
-     * @return void
+     * @return string
      */
     protected function getAccessToken()
     {
-        if ($this->checkState == true) {
+        if ($this->checkState === true) {
             if (!isset($_GET['state']) || $_GET['state'] != $this->config['state']) {
                 throw new \Exception('传递的STATE参数不匹配！');
             }
@@ -133,8 +149,9 @@ abstract class Gateway implements GatewayInterface
      */
     protected function getToken()
     {
-        if (!$this->token) {
-            $token       = $this->getAccessToken();
+        if (empty($this->token)) {
+            $token = $this->getAccessToken();
+            /** @scrutinizer ignore-call */
             $this->token = $this->parseToken($token);
         }
     }

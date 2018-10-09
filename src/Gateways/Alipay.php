@@ -100,7 +100,7 @@ class Alipay extends Gateway
 
     /**
      * 默认的AccessToken请求参数
-     * @return type
+     * @return array
      */
     protected function accessTokenParams()
     {
@@ -128,10 +128,13 @@ class Alipay extends Gateway
 
         $rsaKey = $this->getRsaKeyVal(self::RSA_PRIVATE);
         $res    = openssl_get_privatekey($rsaKey);
-        $sign   = '';
-        openssl_sign($str, $sign, $res, OPENSSL_ALGO_SHA256);
-        openssl_free_key($res);
-        return base64_encode($sign);
+        if ($res !== false) {
+            $sign = '';
+            openssl_sign($str, $sign, $res, OPENSSL_ALGO_SHA256);
+            openssl_free_key($res);
+            return base64_encode($sign);
+        }
+        throw new \Exception('支付宝RSA私钥不正确');
     }
 
     /**
@@ -153,7 +156,7 @@ class Alipay extends Gateway
         }
         $rsa = $this->config[$keyname];
         if (is_file($rsa)) {
-            $rsa = file_get_contents($rsa, 'r');
+            $rsa = file_get_contents($rsa);
         }
         if (empty($rsa)) {
             throw new \Exception('支付宝RSA密钥未配置');

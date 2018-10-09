@@ -92,6 +92,12 @@ class Twitter extends Gateway
         return $data;
     }
 
+    /**
+     * 获取oauth参数
+     *
+     * @param array $params
+     * @return array
+     */
     private function getOAuthParams($params = [])
     {
         $_default = [
@@ -105,6 +111,13 @@ class Twitter extends Gateway
         return array_merge($_default, $params);
     }
 
+    /**
+     * 签名操作
+     *
+     * @param array $request
+     * @param array $params
+     * @return string
+     */
     private function signature($request, $params = [])
     {
         ksort($params);
@@ -115,6 +128,12 @@ class Twitter extends Gateway
         return rawurlencode(base64_encode(hash_hmac('sha1', $sign_str, $sign_key, true)));
     }
 
+    /**
+     * 获取请求附带的Header头信息
+     *
+     * @param array $params
+     * @return string
+     */
     private function getAuthorizationHeader($params)
     {
         $return = 'OAuth ';
@@ -128,7 +147,7 @@ class Twitter extends Gateway
      * 获取access token
      * twitter不是标准的oauth2
      *
-     * @return void
+     * @return array
      */
     protected function getAccessToken()
     {

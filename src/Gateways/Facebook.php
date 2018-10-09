@@ -85,7 +85,7 @@ class Facebook extends Gateway
 
     /**
      * Facebook的AccessToken请求参数
-     * @return type
+     * @return array
      */
     protected function accessTokenParams()
     {
@@ -135,8 +135,8 @@ class Facebook extends Gateway
     /**
      * 获取用户头像
      *
-     * @param [type] $rsp
-     * @return void
+     * @param array $rsp
+     * @return string
      */
     private function getAvatar($rsp)
     {

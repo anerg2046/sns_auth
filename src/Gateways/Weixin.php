@@ -120,7 +120,7 @@ class Weixin extends Gateway
     /**
      * 默认的AccessToken请求参数
      *
-     * @return type
+     * @return array
      */
     protected function accessTokenParams()
     {
