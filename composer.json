@@ -1,6 +1,6 @@
 {
     "name": "anerg2046/sns_auth",
-    "description": "weixin weibo qq sns oauth",
+    "description": "weixin weibo qq alipay twitter google line facebook sns oauth",
     "type": "library",
     "license": "MIT",
     "authors": [

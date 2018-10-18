@@ -199,10 +199,12 @@ $snsInfo = OAuth::$name($this->config)->mustCheckState()->userinfo();
 #### 2.QQ
 
 ```
-'app_id'     => '1013****',
-'app_secret' => '67c52bc284b32e7**********',
-'scope'      => 'get_user_info',
+'app_id'        => '1013****',
+'app_secret'    => '67c52bc284b32e7**********',
+'scope'         => 'get_user_info',
 ```
+QQ现在可以获取`unionid`了，详见: http://wiki.connect.qq.com/unionid%E4%BB%8B%E7%BB%8D
+只需要配置参数`$config['withUnionid'] = true`，默认不会请求获取Unionid
 
 #### 3.微博
 
