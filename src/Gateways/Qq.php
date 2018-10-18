@@ -34,7 +34,9 @@ class Qq extends Gateway
         $this->getToken();
 
         if (!isset($this->token['openid']) || !$this->token['openid']) {
-            $this->token['openid'] = $this->getOpenID();
+            $userID                 = $this->getOpenID();
+            $this->token['openid']  = $userID['openid'];
+            $this->token['unionid'] = isset($userID['unionid']) ?: '';
         }
 
         return $this->token['openid'];
@@ -49,6 +51,7 @@ class Qq extends Gateway
 
         $userinfo = [
             'openid'  => $this->openid(),
+            'unionid' => isset($this->token['unionid']) ? $this->token['unionid'] : '',
             'channel' => 'qq',
             'nick'    => $rsp['nickname'],
             'gender'  => $rsp['gender'] == "男" ? 'm' : 'f',
@@ -108,12 +111,19 @@ class Qq extends Gateway
      */
     private function getOpenID()
     {
-        $client   = new \GuzzleHttp\Client();
-        $response = $client->request('GET', self::API_BASE . 'oauth2.0/me', ['query' => ['access_token' => $this->token['access_token']]]);
+        $client = new \GuzzleHttp\Client();
+
+        $query = ['access_token' => $this->token['access_token']];
+        // 如果要获取unionid，先去申请：http://wiki.connect.qq.com/%E5%BC%80%E5%8F%91%E8%80%85%E5%8F%8D%E9%A6%88
+        if (isset($this->config['withUnionid']) && $this->config['withUnionid'] === true) {
+            $query['unionid'] = 1;
+        }
+
+        $response = $client->request('GET', self::API_BASE . 'oauth2.0/me', ['query' => $query]);
         $data     = $response->getBody()->getContents();
         $data     = json_decode(trim(substr($data, 9), " );\n"), true);
         if (isset($data['openid'])) {
-            return $data['openid'];
+            return $data;
         } else {
             throw new \Exception("获取用户openid出错：" . $data['error_description']);
         }
