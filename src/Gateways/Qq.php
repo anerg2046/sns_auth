@@ -31,6 +31,11 @@ class Qq extends Gateway
      */
     public function openid()
     {
+
+        if (isset($_GET['access_token']) && !empty($_GET['access_token'])) {
+            $this->token['access_token'] = $_GET['access_token'];
+        }
+
         $this->getToken();
 
         if (!isset($this->token['openid']) || !$this->token['openid']) {
@@ -50,7 +55,7 @@ class Qq extends Gateway
         $rsp = $this->userinfoRaw();
 
         $userinfo = [
-            'openid'  => $this->openid(),
+            'openid'  => $openid = $this->openid(),
             'unionid' => isset($this->token['unionid']) ? $this->token['unionid'] : '',
             'channel' => 'qq',
             'nick'    => $rsp['nickname'],
@@ -87,7 +92,11 @@ class Qq extends Gateway
 
         $data = $this->$method(self::API_BASE . $api, $params);
 
-        return json_decode($data, true);
+        $ret = json_decode($data, true);
+        if ($ret['ret'] != 0) {
+            throw new \Exception("qq获取用户信息出错：" . $ret['msg']);
+        }
+        return $ret;
     }
 
     /**
