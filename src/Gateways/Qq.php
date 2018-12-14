@@ -54,13 +54,18 @@ class Qq extends Gateway
     {
         $rsp = $this->userinfoRaw();
 
+        $avatar = $rsp['figureurl_qq_2'] ?: $rsp['figureurl_qq_1'];
+        if ($avatar) {
+            $avatar = \preg_replace('~\/\d+$~', '/0', $avatar);
+        }
+
         $userinfo = [
             'openid'  => $openid = $this->openid(),
             'unionid' => isset($this->token['unionid']) ? $this->token['unionid'] : '',
             'channel' => 'qq',
             'nick'    => $rsp['nickname'],
             'gender'  => $rsp['gender'] == "男" ? 'm' : 'f',
-            'avatar'  => $rsp['figureurl_qq_2'] ? $rsp['figureurl_qq_2'] : $rsp['figureurl_qq_1'],
+            'avatar'  => $avatar,
         ];
         return $userinfo;
     }

@@ -61,13 +61,18 @@ class Weixin extends Gateway
     {
         $rsp = $this->userinfoRaw();
 
+        $avatar = $rsp['headimgurl'];
+        if ($avatar) {
+            $avatar = \preg_replace('~\/\d+$~', '/0', $avatar);
+        }
+
         $userinfo = [
             'openid'  => $this->openid(),
             'unionid' => isset($this->token['unionid']) ? $this->token['unionid'] : '',
             'channel' => 'weixin',
             'nick'    => $rsp['nickname'],
             'gender'  => $this->getGender($rsp['sex']),
-            'avatar'  => $rsp['headimgurl'],
+            'avatar'  => $avatar,
         ];
         return $userinfo;
     }
