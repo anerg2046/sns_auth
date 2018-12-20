@@ -1,6 +1,5 @@
 # 通用第三方登录说明文档
 
-
 [![GitHub stars](https://img.shields.io/github/stars/anerg2046/sns_auth.svg)](https://github.com/anerg2046/sns_auth/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/anerg2046/sns_auth.svg)](https://github.com/anerg2046/sns_auth/network)
 [![GitHub issues](https://img.shields.io/github/issues/anerg2046/sns_auth.svg)](https://github.com/anerg2046/sns_auth/issues)
@@ -11,16 +10,16 @@
 [![License](https://poser.pugx.org/anerg2046/sns_auth/license)](https://packagist.org/packages/anerg2046/sns_auth)
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
 
-2.0版本全新发布，目前支持的登录平台包括：
+2.0 版本全新发布，目前支持的登录平台包括：
 
-* 微信
-* QQ
-* 微博
-* 支付宝
-* Facebook
-* Twitter
-* Line
-* Google
+-   微信
+-   QQ
+-   微博
+-   支付宝
+-   Facebook
+-   Twitter
+-   Line
+-   Google
 
 ### 安装
 
@@ -57,7 +56,7 @@ composer require anerg2046/sns_auth
 
 ### 公共方法
 
-在接口文件中，定义了4个方法，是每个第三方基类都必须实现的，用于相关的第三方登录操作和获取数据。方法名如下：
+在接口文件中，定义了 4 个方法，是每个第三方基类都必须实现的，用于相关的第三方登录操作和获取数据。方法名如下：
 
 ```php
     /**
@@ -92,7 +91,7 @@ composer require anerg2046/sns_auth
 
 ### 典型用法
 
-以ThinkPHP5为例
+以 ThinkPHP5 为例
 
 ```php
 <?php
@@ -174,17 +173,35 @@ class Sns
 }
 ```
 
-2.0版本不再通过系统自动设置state，如有需要请自行处理验证，state也放入config里即可
+2.0 版本不再通过系统自动设置 state，如有需要请自行处理验证，state 也放入 config 里即可
 
-Line和Facebook强制要求传递state，如果你没有设置，则会传递随机值
+Line 和 Facebook 强制要求传递 state，如果你没有设置，则会传递随机值
 
-如果要验证state，则在获取用户信息的时候要加上`->mustCheckState()`方法。
+如果要验证 state，则在获取用户信息的时候要加上`->mustCheckState()`方法。
 
 ```php
 $snsInfo = OAuth::$name($this->config)->mustCheckState()->userinfo();
 ```
 
-> 注意，不是所有的平台都支持传递state，请自行阅读官方文档
+> 注意，不是所有的平台都支持传递 state，请自行阅读官方文档
+
+### 客户端登录
+
+```php
+    public function sns()
+    {
+        $platform = $this->request->param('sns_platform');
+
+        //获取本站的第三方登录配置
+        $config = Config::get($platform . '.' . Config::get($platform));
+        // $config['proxy'] = 'http://127.0.0.1:1080';
+        //Facebook,Line,要求客户端传递access_token即可
+        $config['access_token'] = $this->request->param('access_token', '');
+
+        $snsInfo = OAuth::$platform($config)->userinfo();
+        print_r($snsInfo);
+    }
+```
 
 ### 配置文件样例
 
@@ -203,8 +220,9 @@ $snsInfo = OAuth::$name($this->config)->mustCheckState()->userinfo();
 'app_secret'    => '67c52bc284b32e7**********',
 'scope'         => 'get_user_info',
 ```
-QQ现在可以获取`unionid`了，详见: http://wiki.connect.qq.com/unionid%E4%BB%8B%E7%BB%8D
-只需要配置参数`$config['withUnionid'] = true`，默认不会请求获取Unionid
+
+QQ 现在可以获取`unionid`了，详见: http://wiki.connect.qq.com/unionid%E4%BB%8B%E7%BB%8D
+只需要配置参数`$config['withUnionid'] = true`，默认不会请求获取 Unionid
 
 #### 3.微博
 
@@ -231,7 +249,7 @@ QQ现在可以获取`unionid`了，详见: http://wiki.connect.qq.com/unionid%E4
 'scope'      => 'public_profile,user_gender',//user_gender需要审核，所以不一定能获取到
 ```
 
-facebook有个特殊的配置`$config['field']`，默认是`'id,name,gender,picture.width(400)'`，你可以根据需求参考官方文档自行选择要获取的用户信息
+facebook 有个特殊的配置`$config['field']`，默认是`'id,name,gender,picture.width(400)'`，你可以根据需求参考官方文档自行选择要获取的用户信息
 
 #### 6.Twitter
 
@@ -269,7 +287,8 @@ Array
 )
 ```
 
-> 微信会返回特有的unionid字段
+> 微信会返回特有的 unionid 字段
 
 ### 其他
-使用中如果有什么问题，请提交issue，我会及时查看
+
+使用中如果有什么问题，请提交 issue，我会及时查看
