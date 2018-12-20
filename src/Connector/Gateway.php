@@ -55,6 +55,7 @@ abstract class Gateway implements GatewayInterface
         ];
         $this->config    = array_merge($_config, $config);
         $this->timestamp = time();
+        $this->clientParams();
     }
 
     /**
