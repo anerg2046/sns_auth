@@ -197,6 +197,9 @@ $snsInfo = OAuth::$name($this->config)->mustCheckState()->userinfo();
         // $config['proxy'] = 'http://127.0.0.1:1080';
         //QQ,Facebook,Line,要求客户端传递access_token即可
         $config['access_token'] = $this->request->param('access_token', '');
+        //Twitter需要传递下面两个参数
+        $config['oauth_token']        = $this->request->param('oauth_token', '');
+        $config['oauth_token_secret'] = $this->request->param('oauth_token_secret', '');
 
         $snsInfo = OAuth::$platform($config)->userinfo();
         print_r($snsInfo);
