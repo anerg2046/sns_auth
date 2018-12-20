@@ -77,6 +77,9 @@ abstract class Gateway implements GatewayInterface
         if (isset($this->config['user_id']) && !empty($this->config['user_id'])) {
             $this->token['user_id'] = $this->config['user_id'];
         }
+        if (isset($this->config['screen_name']) && !empty($this->config['screen_name'])) {
+            $this->token['screen_name'] = $this->config['screen_name'];
+        }
     }
 
     /**
