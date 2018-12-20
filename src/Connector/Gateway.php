@@ -53,7 +53,10 @@ abstract class Gateway implements GatewayInterface
             'proxy'         => '',
             'state'         => '',
         ];
-        $this->config    = array_merge($_config, $config);
+        $this->config = array_merge($_config, $config);
+        if (isset($this->config['access_token']) && !empty($this->config['access_token'])) {
+            $this->token['access_token'] = $this->config['access_token'];
+        }
         $this->timestamp = time();
     }
 
