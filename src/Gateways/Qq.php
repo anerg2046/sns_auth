@@ -32,10 +32,6 @@ class Qq extends Gateway
     public function openid()
     {
 
-        if (isset($_GET['access_token']) && !empty($_GET['access_token'])) {
-            $this->token['access_token'] = $_GET['access_token'];
-        }
-
         $this->getToken();
 
         if (!isset($this->token['openid']) || !$this->token['openid']) {
