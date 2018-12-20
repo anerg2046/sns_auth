@@ -83,7 +83,7 @@ class Line extends Gateway
             'uri'    => self::API_BASE . $api,
         ];
 
-        $headers = ['Authorization' => $this->token['token_type'] . ' ' . $this->token['access_token']];
+        $headers = ['Authorization' => isset($this->token['token_type']) ? $this->token['token_type'] : 'Bearer' . ' ' . $this->token['access_token']];
 
         $data = $this->$method($request['uri'], $params, $headers);
 
