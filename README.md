@@ -195,7 +195,7 @@ $snsInfo = OAuth::$name($this->config)->mustCheckState()->userinfo();
         //获取本站的第三方登录配置
         $config = Config::get($platform . '.' . Config::get($platform));
         // $config['proxy'] = 'http://127.0.0.1:1080';
-        //Facebook,Line,要求客户端传递access_token即可
+        //QQ,Facebook,Line,要求客户端传递access_token即可
         $config['access_token'] = $this->request->param('access_token', '');
 
         $snsInfo = OAuth::$platform($config)->userinfo();

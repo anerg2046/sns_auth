@@ -53,11 +53,26 @@ abstract class Gateway implements GatewayInterface
             'proxy'         => '',
             'state'         => '',
         ];
-        $this->config = array_merge($_config, $config);
+        $this->config    = array_merge($_config, $config);
+        $this->timestamp = time();
+    }
+
+    /**
+     * 设置客户端请求的参数
+     *
+     * @return void
+     */
+    private function clientParams()
+    {
         if (isset($this->config['access_token']) && !empty($this->config['access_token'])) {
             $this->token['access_token'] = $this->config['access_token'];
         }
-        $this->timestamp = time();
+        if (isset($this->config['oauth_token']) && !empty($this->config['oauth_token'])) {
+            $this->token['oauth_token'] = $this->config['oauth_token'];
+        }
+        if (isset($this->config['oauth_token_secret']) && !empty($this->config['oauth_token_secret'])) {
+            $this->token['oauth_token_secret'] = $this->config['oauth_token_secret'];
+        }
     }
 
     /**
