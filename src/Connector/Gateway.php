@@ -55,32 +55,6 @@ abstract class Gateway implements GatewayInterface
         ];
         $this->config    = array_merge($_config, $config);
         $this->timestamp = time();
-        $this->clientParams();
-    }
-
-    /**
-     * 设置客户端请求的参数
-     *
-     * @return void
-     */
-    private function clientParams()
-    {
-        if (isset($this->config['access_token']) && !empty($this->config['access_token'])) {
-            $this->token['access_token'] = $this->config['access_token'];
-        }
-        if (isset($this->config['oauth_token']) && !empty($this->config['oauth_token'])) {
-            $this->token['oauth_token'] = $this->config['oauth_token'];
-        }
-        if (isset($this->config['oauth_token_secret']) && !empty($this->config['oauth_token_secret'])) {
-            $this->token['oauth_token_secret'] = $this->config['oauth_token_secret'];
-            $this->tokenSecret                 = $this->config['oauth_token_secret'];
-        }
-        if (isset($this->config['user_id']) && !empty($this->config['user_id'])) {
-            $this->token['user_id'] = $this->config['user_id'];
-        }
-        if (isset($this->config['screen_name']) && !empty($this->config['screen_name'])) {
-            $this->token['screen_name'] = $this->config['screen_name'];
-        }
     }
 
     /**

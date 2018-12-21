@@ -11,6 +11,29 @@ class Qq extends Gateway
     protected $AccessTokenURL = 'https://graph.qq.com/oauth2.0/token';
 
     /**
+     * 构造函数
+     *
+     * @param array $config
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        $this->clientParams();
+    }
+
+    /**
+     * 设置客户端请求的参数
+     *
+     * @return void
+     */
+    private function clientParams()
+    {
+        if (isset($this->config['access_token']) && !empty($this->config['access_token'])) {
+            $this->token['access_token'] = $this->config['access_token'];
+        }
+    }
+
+    /**
      * 得到跳转地址
      */
     public function getRedirectUrl()
