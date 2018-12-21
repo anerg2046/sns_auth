@@ -73,6 +73,7 @@ abstract class Gateway implements GatewayInterface
         }
         if (isset($this->config['oauth_token_secret']) && !empty($this->config['oauth_token_secret'])) {
             $this->token['oauth_token_secret'] = $this->config['oauth_token_secret'];
+            $this->tokenSecret                 = $this->config['oauth_token_secret'];
         }
         if (isset($this->config['user_id']) && !empty($this->config['user_id'])) {
             $this->token['user_id'] = $this->config['user_id'];
