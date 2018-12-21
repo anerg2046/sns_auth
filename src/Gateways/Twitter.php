@@ -58,10 +58,9 @@ class Twitter extends Gateway
             } else {
                 throw new \Exception("获取Twitter ACCESS_TOKEN 出错：" . json_encode($this->token));
             }
-
         }
 
-        return $this->call('1.1/account/verify_credentials.json', $this->token, 'GET', true);
+        return $this->call('1.1/users/show.json', $this->token, 'GET', true);
     }
 
     /**
