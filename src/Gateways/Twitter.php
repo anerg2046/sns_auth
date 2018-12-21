@@ -29,9 +29,6 @@ class Twitter extends Gateway
      */
     private function clientParams()
     {
-        if (isset($this->config['access_token']) && !empty($this->config['access_token'])) {
-            $this->token['access_token'] = $this->config['access_token'];
-        }
         if (isset($this->config['oauth_token']) && !empty($this->config['oauth_token'])) {
             $this->token['oauth_token'] = $this->config['oauth_token'];
         }
