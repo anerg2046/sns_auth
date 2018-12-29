@@ -67,7 +67,7 @@ class Google extends Gateway
             'openid'  => $rsp['id'],
             'channel' => 'google',
             'nick'    => $rsp['name'],
-            'gender'  => $this->getGender($rsp['gender']),
+            'gender'  => isset($rsp['gender']) ? $this->getGender($rsp['gender']) : 'n',
             'avatar'  => $rsp['picture'],
         ];
         return $userinfo;
