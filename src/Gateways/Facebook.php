@@ -115,7 +115,7 @@ class Facebook extends Gateway
         $params = [
             'client_id'     => $this->config['app_id'],
             'client_secret' => $this->config['app_secret'],
-            'code'          => isset($_GET['code']) ? $_GET['code'] : '',
+            'code'          => isset($_REQUEST['code']) ? $_REQUEST['code'] : '',
             'redirect_uri'  => $this->config['callback'],
         ];
         return $params;

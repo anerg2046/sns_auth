@@ -202,6 +202,7 @@ $snsInfo = OAuth::$name($this->config)->mustCheckState()->userinfo();
         $config['oauth_token_secret'] = $this->request->param('oauth_token_secret', '');
         $config['user_id']            = $this->request->param('user_id', '');
         $config['screen_name']        = $this->request->param('screen_name', '');
+        //其他和web登录一样，要求客户端传递code过来即可，可以是post也可以是get方式
 
         $snsInfo = OAuth::$platform($config)->userinfo();
         print_r($snsInfo);
