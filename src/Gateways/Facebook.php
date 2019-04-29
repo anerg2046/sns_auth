@@ -71,6 +71,7 @@ class Facebook extends Gateway
             'nick'    => $rsp['name'],
             'gender'  => $this->getGender($rsp), //不一定会返回
             'avatar'  => $this->getAvatar($rsp),
+	    'email'   => isset($rsp['email']) ? $rsp['email'] : ''
         ];
         return $userinfo;
     }
