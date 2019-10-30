@@ -60,7 +60,7 @@ class Qq extends Gateway
         if (!isset($this->token['openid']) || !$this->token['openid']) {
             $userID                 = $this->getOpenID();
             $this->token['openid']  = $userID['openid'];
-            $this->token['unionid'] = isset($userID['unionid']) ?: '';
+            $this->token['unionid'] = isset($userID['unionid']) ? $userID['unionid'] : '';
         }
 
         return $this->token['openid'];
