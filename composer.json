@@ -1,21 +1,21 @@
 {
-    "name": "anerg2046/sns_auth",
-    "description": "weixin weibo qq alipay twitter google line facebook sns oauth",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Coeus",
-            "email": "r.anerg@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.6.0",
-        "guzzlehttp/guzzle": "^6.3"
-    },
-    "autoload": {
-        "psr-4": {
-            "anerg\\OAuth2\\": "src"
-        }
+  "name": "anerg2046/sns_auth",
+  "description": "weixin weibo qq alipay twitter google line facebook sns oauth",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Coeus",
+      "email": "r.anerg@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=5.6.0",
+    "guzzlehttp/guzzle": "^7"
+  },
+  "autoload": {
+    "psr-4": {
+      "anerg\\OAuth2\\": "src"
+    }
+  }
 }
